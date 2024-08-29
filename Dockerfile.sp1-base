@@ -17,4 +17,4 @@ ENV CARGO_HOME=/root/.cargo
 COPY ./sp1up.sh .
 RUN chmod +x ./sp1up.sh
 RUN command ./sp1up.sh
-RUN sp1up
+RUN command sp1up
