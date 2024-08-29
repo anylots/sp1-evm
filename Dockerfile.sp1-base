@@ -17,4 +17,4 @@ ENV CARGO_HOME=/root/.cargo
 COPY ./sp1up.sh .
 RUN chmod +x ./sp1up.sh
 RUN ./sp1up.sh && . /root/.bashrc && sp1up && cargo prove --version
-
+RUN . /root/.bashrc
