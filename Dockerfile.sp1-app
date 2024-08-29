@@ -1,0 +1,6 @@
+FROM sp1-base:latest
+
+COPY . .
+RUN cd program && cargo prove build
+RUN cd script && cargo run --release -- --execute
+RUN cd script && cargo run --release -- --prove
