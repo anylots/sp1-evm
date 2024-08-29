@@ -1,7 +1,6 @@
 FROM sp1-base:latest
 
-RUN rustup toolchain list
-RUN rustup default succinct
+RUN echo $PATH
 RUN cargo prove --version
 
 COPY . /app
