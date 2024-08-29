@@ -1,5 +1,7 @@
 FROM sp1-base:latest
 
+RUN cargo prove --version
+
 COPY . /app
 WORKDIR /app
 RUN cd program && cargo prove build
