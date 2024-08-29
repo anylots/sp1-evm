@@ -1,6 +1,8 @@
 FROM sp1-base:latest
 
 RUN echo $PATH
+RUN cargo list  
+
 RUN cargo prove --version
 
 COPY . /app
