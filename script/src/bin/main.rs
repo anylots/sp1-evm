@@ -10,9 +10,11 @@
 //! RUST_LOG=info cargo run --release -- --prove
 //! ```
 
+use std::time::Instant;
+
 use alloy_sol_types::SolType;
 use clap::Parser;
-use fibonacci_lib::PublicValuesStruct;
+use evm_lib::PublicValuesStruct;
 use sp1_sdk::{ProverClient, SP1Stdin};
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
@@ -65,7 +67,7 @@ fn main() {
         println!("a: {}", a);
         println!("b: {}", b);
 
-        let (expected_a, expected_b) = fibonacci_lib::exec(n);
+        let (expected_a, expected_b) = evm_lib::exec(n);
         assert_eq!(a, expected_a);
         assert_eq!(b, expected_b);
         println!("Values are correct!");
@@ -73,6 +75,8 @@ fn main() {
         // Record the number of cycles executed.
         println!("Number of cycles: {}", report.total_instruction_count());
     } else {
+        let start = Instant::now();
+
         // Setup the program for proving.
         let (pk, vk) = client.setup(FIBONACCI_ELF);
 
@@ -82,7 +86,11 @@ fn main() {
             .run()
             .expect("failed to generate proof");
 
-        println!("Successfully generated proof!");
+        let duration_secs = start.elapsed().as_secs();
+        println!(
+            "Successfully generated proof!, time use: {:?} secs",
+            duration_secs
+        );
 
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");

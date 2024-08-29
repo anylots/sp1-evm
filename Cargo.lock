@@ -1647,6 +1647,38 @@ dependencies = [
 ]
 
 [[package]]
+name = "evm-lib"
+version = "0.1.0"
+dependencies = [
+ "alloy-sol-types",
+ "revm",
+]
+
+[[package]]
+name = "evm-program"
+version = "0.1.0"
+dependencies = [
+ "alloy-sol-types",
+ "evm-lib",
+ "sp1-zkvm",
+]
+
+[[package]]
+name = "evm-script"
+version = "0.1.0"
+dependencies = [
+ "alloy-sol-types",
+ "clap",
+ "evm-lib",
+ "hex",
+ "serde",
+ "serde_json",
+ "sp1-helper",
+ "sp1-sdk",
+ "tracing",
+]
+
+[[package]]
 name = "eyre"
 version = "0.6.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1718,38 +1750,6 @@ name = "fiat-crypto"
 version = "0.2.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "28dea519a9695b9977216879a3ebfddf92f1c08c05d984f8996aecd6ecdc811d"
-
-[[package]]
-name = "fibonacci-lib"
-version = "0.1.0"
-dependencies = [
- "alloy-sol-types",
- "revm",
-]
-
-[[package]]
-name = "fibonacci-program"
-version = "0.1.0"
-dependencies = [
- "alloy-sol-types",
- "fibonacci-lib",
- "sp1-zkvm",
-]
-
-[[package]]
-name = "fibonacci-script"
-version = "0.1.0"
-dependencies = [
- "alloy-sol-types",
- "clap",
- "fibonacci-lib",
- "hex",
- "serde",
- "serde_json",
- "sp1-helper",
- "sp1-sdk",
- "tracing",
-]
 
 [[package]]
 name = "fixed-hash"

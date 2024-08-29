@@ -29,7 +29,7 @@ pub const KECCAK_EMPTY: B256 =
     b256!("c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470");
 
 pub fn exec(n: u32) -> (u32, u32) {
-    for _ in 0..3 {
+    for _ in 0..20 {
         let mut cache_state = revm::CacheState::new(false);
 
         let acc_info = revm::primitives::AccountInfo {
