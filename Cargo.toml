@@ -8,3 +8,18 @@ resolver = "2"
 
 [workspace.dependencies]
 alloy-sol-types = "0.7.7"
+serde_json = { version = "1.0" }
+
+
+[patch."https://github.com/scroll-tech/zktrie"]
+zktrie = { git = "https://github.com/scroll-tech//zktrie.git", branch = "lazy-commitment-for-rust-zktrie" }
+
+
+
+[patch.crates-io]
+ethers-core = { git = "https://github.com/scroll-tech/ethers-rs.git", branch = "feat/rkyv" }
+ethers-signers  = { git = "https://github.com/scroll-tech/ethers-rs.git", branch = "feat/rkyv" }
+alloy-eips = { git = "https://github.com/scroll-tech/alloy.git", branch = "rustc-1.75" }
+primitive-types = { git = "https://github.com/scroll-tech/parity-common.git", branch = "feat/rkyv" }
+ethereum-types = { git = "https://github.com/scroll-tech/parity-common.git", branch = "feat/rkyv" }
+ff = { git = "https://github.com/scroll-tech/ff", branch = "feat/sp1" }

@@ -10,11 +10,11 @@
 //! RUST_LOG=info cargo run --release -- --prove
 //! ```
 
-use std::time::Instant;
+use std::{fs::File, path::PathBuf, str::FromStr, time::Instant};
 
 use alloy_sol_types::SolType;
 use clap::Parser;
-use evm_lib::PublicValuesStruct;
+// use evm_lib::PublicValuesStruct;
 use sp1_sdk::{ProverClient, SP1Stdin};
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
@@ -34,7 +34,21 @@ struct Args {
     n: u32,
 }
 
-fn main() {
+use eth_types::l2_types::BlockTrace;
+
+fn load_trace(file_path: &str) -> Vec<Vec<BlockTrace>> {
+    use std::io::BufReader;
+
+    let file = File::open(file_path).unwrap();
+    let reader = BufReader::new(file);
+
+    let chunk_traces: Vec<Vec<BlockTrace>> = serde_json::from_reader(reader).unwrap();
+
+    chunk_traces
+}
+
+#[tokio::main]
+async fn main() {
     // Setup the logger.
     sp1_sdk::utils::setup_logger();
 
@@ -49,9 +63,18 @@ fn main() {
     // Setup the prover client.
     let client = ProverClient::new();
 
+    let traces: Vec<Vec<BlockTrace>> = load_trace("../testdata/dev.json");
+
+    println!("traces_len: {}", traces[0].len());
+
+    let trace_struct = &traces[0][0];
+
+    let trace = serde_json::to_string(trace_struct).unwrap();
+
     // Setup the inputs.
     let mut stdin = SP1Stdin::new();
-    stdin.write(&args.n);
+
+    stdin.write(&trace);
 
     println!("n: {}", args.n);
 
@@ -60,17 +83,18 @@ fn main() {
         let (output, report) = client.execute(FIBONACCI_ELF, stdin).run().unwrap();
         println!("Program executed successfully.");
 
-        // Read the output.
-        let decoded = PublicValuesStruct::abi_decode(output.as_slice(), true).unwrap();
-        let PublicValuesStruct { n, a, b } = decoded;
-        println!("n: {}", n);
-        println!("a: {}", a);
-        println!("b: {}", b);
+        // // Read the output.
+        // let decoded = PublicValuesStruct::abi_decode(output.as_slice(), true).unwrap();
+        // let PublicValuesStruct { n, a, b } = decoded;
+        // println!("n: {}", n);
+        // println!("a: {}", a);
+        // println!("b: {}", b);
 
-        let (expected_a, expected_b) = evm_lib::exec(n);
-        assert_eq!(a, expected_a);
-        assert_eq!(b, expected_b);
-        println!("Values are correct!");
+        // // let (expected_a, expected_b) =
+        // let rt = evm_lib::verify(trace_struct);
+        // // assert_eq!(a, expected_a);
+        // // assert_eq!(b, expected_b);
+        // println!("Values are correct!");
 
         // Record the number of cycles executed.
         println!("Number of cycles: {}", report.total_instruction_count());
