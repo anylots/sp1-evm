@@ -19,7 +19,7 @@ To run the program without generating a proof:
 
 ```sh
 cd script
-cargo run --release -- --execute
+RUST_BACKTRACE=full cargo run --features="bin-deps" --release -- --prove
 ```
 
 This will execute the program and display the output.
@@ -30,7 +30,7 @@ To generate a core proof for your program:
 
 ```sh
 cd script
-cargo run --release -- --prove
+RUST_BACKTRACE=full cargo run --features="bin-deps" --release -- --prove
 ```
 
 ### Generate an EVM-Compatible (PLONK) Proof
