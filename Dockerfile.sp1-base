@@ -12,6 +12,8 @@ RUN apt-get update && \
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 ENV CARGO_HOME=/root/.cargo
+RUN rustup install nightly-2024-07-07  
+RUN rustup default nightly-2024-07-07  
 
 # Install sp1 cli
 COPY ./sp1up.sh .

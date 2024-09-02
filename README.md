@@ -13,13 +13,29 @@ that can generate a proof of any RISC-V program.
 There are three main ways to run this project: execute a program, generate a core proof, and
 generate an EVM-compatible proof.
 
+RUST_BACKTRACE=full cargo run --features="bin-deps" --release -- --execute
+
+
+### Build the Program
+
+
+To build the program to risc-v bin:
+
+```sh
+cd program
+cargo prove build
+```
+
+This will output the compiled ELF to the file program/elf/riscv32im-succinct-zkvm-elf.
+
 ### Execute the Program
+
 
 To run the program without generating a proof:
 
 ```sh
 cd script
-RUST_BACKTRACE=full cargo run --features="bin-deps" --release -- --prove
+RUST_BACKTRACE=full cargo run --features="bin-deps" --release -- --execute
 ```
 
 This will execute the program and display the output.

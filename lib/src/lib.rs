@@ -59,12 +59,6 @@ use revm::{
     Evm,
 };
 
-/**
- * PublicValuesStruct
- * n
- * a
- * b
- */
 sol! {
     /// The public values encoded as a struct that can be easily deserialized inside Solidity.
     struct PublicValuesStruct {
@@ -76,16 +70,6 @@ sol! {
         uint32 b;
     }
 }
-
-/// EVM executor that handles the block.
-// pub struct EvmExecutor {
-//     hardfork_config: HardforkConfig,
-//     db: CacheDB<ReadOnlyDB>,
-//     zktrie_db: Rc<ZkMemoryDb>,
-//     zktrie: ZkTrie<UpdateDb>,
-//     spec_id: SpecId,
-//     hooks: hooks::ExecuteHooks,
-// }
 
 pub fn verify(l2_trace: &BlockTrace) -> Result<(), VerificationError> {
     dev_trace!("{l2_trace:#?}");
@@ -145,7 +129,9 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<(), VerificationError> {
         update_metrics_counter!(verification_error);
         e
     })?;
+    println!("start commit_changes for block");
     let revm_root_after = executor.commit_changes(&mut zktrie_state);
+    println!("end commit_changes for block");
 
     #[cfg(feature = "profiling")]
     if let Ok(report) = guard.report().build() {
@@ -192,7 +178,7 @@ pub const KECCAK_EMPTY: B256 =
  */
 pub fn exec(n: u32) -> (u32, u32) {
     for _ in 0..20 {
-        let mut cache_state = revm::CacheState::new(false);
+        let cache_state = revm::CacheState::new(false);
 
         let acc_info = revm::primitives::AccountInfo {
             balance: U256::from(10u64.pow(18)),
