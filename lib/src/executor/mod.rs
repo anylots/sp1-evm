@@ -75,7 +75,6 @@ impl EvmExecutor {
             .unwrap();
 
         dev_debug!("handle block {:?}", l2_trace.number());
-        println!("handle block {:?}", l2_trace.number());
         let mut env = Box::<Env>::default();
         env.cfg.chain_id = l2_trace.chain_id();
         env.block = cycle_track!(l2_trace.env(), "create BlockEnv");
@@ -129,7 +128,6 @@ impl EvmExecutor {
             self.hooks.tx_rlp(self, &rlp_bytes);
             env.tx.scroll.rlp_bytes = Some(revm::primitives::Bytes::from(rlp_bytes));
 
-            println!("start transact_commit tx {:?}", &env.tx.transact_to);
             dev_trace!("{env:#?}");
             {
                 let mut revm = cycle_track!(
@@ -156,7 +154,6 @@ impl EvmExecutor {
                 dev_trace!("{_result:#?}");
             }
             self.hooks.post_tx_execution(self, idx);
-            println!("end transact_commit");
 
             dev_debug!("handle {idx}th tx done");
             cycle_tracker_end!("handle tx {}", idx);

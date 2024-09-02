@@ -51,13 +51,7 @@ fn init() {
         .init();
 }
 
-use std::{collections::HashMap, str::FromStr};
-
 use alloy_sol_types::sol;
-use revm::{
-    primitives::{b256, Address, TxKind, B256, U256},
-    Evm,
-};
 
 sol! {
     /// The public values encoded as a struct that can be easily deserialized inside Solidity.
@@ -72,29 +66,11 @@ sol! {
 }
 
 pub fn verify(l2_trace: &BlockTrace) -> Result<(), VerificationError> {
-    dev_trace!("{l2_trace:#?}");
-    let disable_checks = false;
-
+    let disable_checks = true;
     let mut fork_config = HardforkConfig::default_from_chain_id(534352);
     fork_config.set_curie_block(0);
 
     let root_after = l2_trace.storage_trace.root_after;
-    println!("root_after: {:?}", root_after);
-
-    // or with v2 trace
-    // let v2_trace = BlockTraceV2::from(l2_trace.clone());
-
-    // or with rkyv zero copy
-    // let serialized = rkyv::to_bytes::<BlockTraceV2, 4096>(&v2_trace).unwrap();
-    // let archived = unsafe { rkyv::archived_root::<BlockTraceV2>(&serialized[..]) };
-    // let archived = rkyv::check_archived_root::<BlockTraceV2>(&serialized[..]).unwrap();
-
-    #[cfg(feature = "profiling")]
-    let guard = pprof::ProfilerGuardBuilder::default()
-        .frequency(1000)
-        .blocklist(&["libc", "libgcc", "pthread", "vdso"])
-        .build()
-        .unwrap();
 
     let mut zktrie_state = cycle_track!(
         {
@@ -129,24 +105,7 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<(), VerificationError> {
         update_metrics_counter!(verification_error);
         e
     })?;
-    println!("start commit_changes for block");
     let revm_root_after = executor.commit_changes(&mut zktrie_state);
-    println!("end commit_changes for block");
-
-    #[cfg(feature = "profiling")]
-    if let Ok(report) = guard.report().build() {
-        let dir = std::env::temp_dir()
-            .join(env!("CARGO_PKG_NAME"))
-            .join("profiling");
-        std::fs::create_dir_all(&dir).unwrap();
-        let path = dir.join(format!(
-            "block-{}.svg",
-            l2_trace.header.number.unwrap().as_u64()
-        ));
-        let file = std::fs::File::create(&path).unwrap();
-        report.flamegraph(file).unwrap();
-        dev_info!("Profiling report saved to: {:?}", path);
-    }
 
     if root_after != revm_root_after {
         dev_error!(
@@ -168,76 +127,4 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<(), VerificationError> {
         l2_trace.header.hash.unwrap()
     );
     Ok(())
-}
-
-pub const KECCAK_EMPTY: B256 =
-    b256!("c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470");
-
-/**
- * exec
- */
-pub fn exec(n: u32) -> (u32, u32) {
-    for _ in 0..20 {
-        let cache_state = revm::CacheState::new(false);
-
-        let acc_info = revm::primitives::AccountInfo {
-            balance: U256::from(10u64.pow(18)),
-            #[cfg(feature = "scroll")]
-            code_size,
-            code_hash: KECCAK_EMPTY,
-            #[cfg(feature = "scroll-poseidon-codehash")]
-            poseidon_code_hash,
-            code: None,
-            nonce: 0,
-            code_size: todo!(),
-            poseidon_code_hash: todo!(),
-        };
-        cache_state.insert_account_with_storage(
-            Address::from_str("0x0000000000000000000000000000000000000001").unwrap(),
-            acc_info,
-            HashMap::new(),
-        );
-
-        let state = revm::db::State::builder()
-            .with_cached_prestate(cache_state)
-            .with_bundle_update()
-            .build();
-
-        // let mut env = Box::<Env>::default();
-        // env.cfg.chain_id = 1;
-        // env.tx = TxEnv::default();
-
-        // let mut evm = Evm::builder()
-        //     .with_db(&mut state)
-        //     .modify_env(|e| e.clone_from(&env))
-        //     .with_spec_id(SpecId::MERGE)
-        //     .build();
-        // let exec_result = evm.transact_commit();
-        // println!("\nExecution result: {exec_result:#?}");
-
-        let mut evm = Evm::builder()
-            .with_db(state)
-            .modify_tx_env(|tx| {
-                // execution globals block hash/gas_limit/coinbase/timestamp..
-                tx.caller = "0x0000000000000000000000000000000000000001"
-                    .parse()
-                    .unwrap();
-                tx.value = U256::from(10);
-                tx.transact_to = TxKind::Call(
-                    "0x0000000000000000000000000000000000000000"
-                        .parse()
-                        .unwrap(),
-                );
-            })
-            .build();
-        let exec_result = evm.transact();
-        assert!(
-            exec_result.is_ok(),
-            "{}",
-            format!("{}", exec_result.unwrap_err())
-        );
-        println!("\nExecution result: {exec_result:#?}");
-    }
-
-    (n + 1, 2)
 }

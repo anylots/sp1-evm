@@ -13,20 +13,9 @@ use eth_types::l2_types::BlockTrace;
 use evm_lib::{verify, PublicValuesStruct};
 
 pub fn main() {
-    println!("==start app");
     let x = sp1_zkvm::io::read::<String>();
-    println!("==x: {:?}", &x.len());
-    // Read an input to the program.
-    //
-    // Behind the scenes, this compiles down to a custom system call which handles reading inputs
-    // from the prover.
-    // let trace_str = sp1_zkvm::io::read_vec();
-    // println!("trace_str。len(): {:?}", trace_str.len());
 
     let trace: BlockTrace = serde_json::from_str(&x).unwrap();
-    println!("==trace: {:?}", &trace.chain_id);
-
-    // let (a, b) = exec(n);
 
     verify(&trace).unwrap();
 
