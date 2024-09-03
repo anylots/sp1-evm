@@ -1302,6 +1302,84 @@ dependencies = [
 ]
 
 [[package]]
+name = "dashu"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "85b3e5ac1e23ff1995ef05b912e2b012a8784506987a2651552db2c73fb3d7e0"
+dependencies = [
+ "dashu-base",
+ "dashu-float",
+ "dashu-int",
+ "dashu-macros",
+ "dashu-ratio",
+ "rustversion",
+]
+
+[[package]]
+name = "dashu-base"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c0b80bf6b85aa68c58ffea2ddb040109943049ce3fbdf4385d0380aef08ef289"
+
+[[package]]
+name = "dashu-float"
+version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "85078445a8dbd2e1bd21f04a816f352db8d333643f0c9b78ca7c3d1df71063e7"
+dependencies = [
+ "dashu-base",
+ "dashu-int",
+ "num-modular",
+ "num-order",
+ "rustversion",
+ "static_assertions",
+]
+
+[[package]]
+name = "dashu-int"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ee99d08031ca34a4d044efbbb21dff9b8c54bb9d8c82a189187c0651ffdb9fbf"
+dependencies = [
+ "cfg-if",
+ "dashu-base",
+ "num-modular",
+ "num-order",
+ "rustversion",
+ "static_assertions",
+]
+
+[[package]]
+name = "dashu-macros"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "93381c3ef6366766f6e9ed9cf09e4ef9dec69499baf04f0c60e70d653cf0ab10"
+dependencies = [
+ "dashu-base",
+ "dashu-float",
+ "dashu-int",
+ "dashu-ratio",
+ "paste",
+ "proc-macro2",
+ "quote",
+ "rustversion",
+]
+
+[[package]]
+name = "dashu-ratio"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "47e33b04dd7ce1ccf8a02a69d3419e354f2bbfdf4eb911a0b7465487248764c9"
+dependencies = [
+ "dashu-base",
+ "dashu-float",
+ "dashu-int",
+ "num-modular",
+ "num-order",
+ "rustversion",
+]
+
+[[package]]
 name = "debugid"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2314,8 +2392,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c4567c8db10ae91089c99af84c68c38da3ec2f087c3f82960bcdbf3656b6f4d7"
 dependencies = [
  "cfg-if",
+ "js-sys",
  "libc",
  "wasi",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -3363,6 +3443,21 @@ dependencies = [
  "autocfg",
  "num-integer",
  "num-traits",
+]
+
+[[package]]
+name = "num-modular"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "17bb261bf36fa7d83f4c294f834e91256769097b3cb505d44831e0a179ac647f"
+
+[[package]]
+name = "num-order"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "537b596b97c40fcf8056d153049eb22f481c17ebce72a513ec9286e4986d1bb6"
+dependencies = [
+ "num-modular",
 ]
 
 [[package]]
@@ -5133,18 +5228,18 @@ checksum = "cd0b0ec5f1c1ca621c432a25813d8d60c88abe6d3e08a3eb9cf37d97a0fe3d73"
 
 [[package]]
 name = "serde"
-version = "1.0.204"
+version = "1.0.209"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc76f558e0cbb2a839d37354c575f1dc3fdc6546b5be373ba43d95f231bf7c12"
+checksum = "99fce0ffe7310761ca6bf9faf5115afbc19688edd00171d81b1bb1b116c63e09"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.204"
+version = "1.0.209"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e0cd7e117be63d3c3678776753929474f3b04a43a080c744d6b0ae2a8c28e222"
+checksum = "a5831b979fd7b5439637af1752d535ff49f4860c0f341d1baeb6faf0f4242170"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -5400,9 +5495,44 @@ dependencies = [
 ]
 
 [[package]]
-name = "sp1-core"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+name = "sp1-core-executor"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+dependencies = [
+ "bincode",
+ "bytemuck",
+ "elf",
+ "eyre",
+ "generic-array 1.1.0",
+ "hashbrown 0.14.5",
+ "hex",
+ "itertools 0.13.0",
+ "log",
+ "nohash-hasher",
+ "num",
+ "p3-field",
+ "p3-keccak-air",
+ "p3-maybe-rayon",
+ "rand",
+ "rrs-succinct",
+ "serde",
+ "serde_with",
+ "sp1-curves",
+ "sp1-derive",
+ "sp1-primitives",
+ "sp1-stark",
+ "strum 0.26.3",
+ "strum_macros 0.26.4",
+ "thiserror",
+ "tiny-keccak",
+ "tracing",
+ "typenum",
+]
+
+[[package]]
+name = "sp1-core-machine"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "anyhow",
  "arrayref",
@@ -5447,8 +5577,11 @@ dependencies = [
  "serde_with",
  "size",
  "snowbridge-amcl",
+ "sp1-core-executor",
+ "sp1-curves",
  "sp1-derive",
  "sp1-primitives",
+ "sp1-stark",
  "static_assertions",
  "strum 0.26.3",
  "strum_macros 0.26.4",
@@ -5462,9 +5595,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "sp1-curves"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+dependencies = [
+ "curve25519-dalek",
+ "dashu",
+ "elliptic-curve",
+ "generic-array 1.1.0",
+ "itertools 0.13.0",
+ "k256",
+ "num",
+ "p3-field",
+ "serde",
+ "snowbridge-amcl",
+ "sp1-primitives",
+ "sp1-stark",
+ "typenum",
+]
+
+[[package]]
 name = "sp1-derive"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -5484,19 +5637,21 @@ dependencies = [
 
 [[package]]
 name = "sp1-lib"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "anyhow",
  "bincode",
  "cfg-if",
+ "hex",
  "serde",
+ "snowbridge-amcl",
 ]
 
 [[package]]
 name = "sp1-primitives"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "itertools 0.13.0",
  "lazy_static",
@@ -5508,8 +5663,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-prover"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "anyhow",
  "bincode",
@@ -5529,13 +5684,15 @@ dependencies = [
  "serde",
  "serde_json",
  "serial_test",
- "sp1-core",
+ "sp1-core-executor",
+ "sp1-core-machine",
  "sp1-primitives",
  "sp1-recursion-circuit",
  "sp1-recursion-compiler",
  "sp1-recursion-core",
  "sp1-recursion-gnark-ffi",
  "sp1-recursion-program",
+ "sp1-stark",
  "subtle-encoding",
  "tempfile",
  "thiserror",
@@ -5545,8 +5702,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-recursion-circuit"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "bincode",
  "itertools 0.13.0",
@@ -5559,17 +5716,18 @@ dependencies = [
  "p3-matrix",
  "p3-util",
  "serde",
- "sp1-core",
+ "sp1-core-machine",
  "sp1-recursion-compiler",
  "sp1-recursion-core",
  "sp1-recursion-derive",
  "sp1-recursion-program",
+ "sp1-stark",
 ]
 
 [[package]]
 name = "sp1-recursion-compiler"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "backtrace",
  "itertools 0.13.0",
@@ -5583,18 +5741,22 @@ dependencies = [
  "p3-poseidon2",
  "p3-symmetric",
  "p3-util",
+ "rayon",
  "serde",
- "sp1-core",
+ "sp1-core-machine",
  "sp1-primitives",
  "sp1-recursion-core",
+ "sp1-recursion-core-v2",
  "sp1-recursion-derive",
+ "sp1-stark",
  "tracing",
+ "vec_map",
 ]
 
 [[package]]
 name = "sp1-recursion-core"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "arrayref",
  "backtrace",
@@ -5618,18 +5780,60 @@ dependencies = [
  "p3-util",
  "serde",
  "serde_with",
- "sp1-core",
+ "sp1-core-executor",
+ "sp1-core-machine",
  "sp1-derive",
  "sp1-primitives",
+ "sp1-stark",
  "static_assertions",
  "tracing",
  "zkhash",
 ]
 
 [[package]]
+name = "sp1-recursion-core-v2"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+dependencies = [
+ "arrayref",
+ "backtrace",
+ "ff 0.13.0",
+ "hashbrown 0.14.5",
+ "itertools 0.13.0",
+ "num_cpus",
+ "p3-air",
+ "p3-baby-bear",
+ "p3-bn254-fr",
+ "p3-challenger",
+ "p3-commit",
+ "p3-dft",
+ "p3-field",
+ "p3-fri",
+ "p3-matrix",
+ "p3-maybe-rayon",
+ "p3-merkle-tree",
+ "p3-poseidon2",
+ "p3-symmetric",
+ "p3-util",
+ "serde",
+ "serde_with",
+ "sp1-core-executor",
+ "sp1-core-machine",
+ "sp1-derive",
+ "sp1-primitives",
+ "sp1-recursion-core",
+ "sp1-stark",
+ "static_assertions",
+ "thiserror",
+ "tracing",
+ "vec_map",
+ "zkhash",
+]
+
+[[package]]
 name = "sp1-recursion-derive"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -5638,8 +5842,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-recursion-gnark-ffi"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "anyhow",
  "bincode",
@@ -5656,15 +5860,16 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
- "sp1-core",
+ "sp1-core-machine",
  "sp1-recursion-compiler",
+ "sp1-stark",
  "tempfile",
 ]
 
 [[package]]
 name = "sp1-recursion-program"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "itertools 0.13.0",
  "p3-air",
@@ -5682,28 +5887,30 @@ dependencies = [
  "p3-util",
  "rand",
  "serde",
- "sp1-core",
+ "sp1-core-executor",
+ "sp1-core-machine",
  "sp1-primitives",
  "sp1-recursion-compiler",
  "sp1-recursion-core",
+ "sp1-stark",
  "stacker",
  "tracing",
 ]
 
 [[package]]
 name = "sp1-sdk"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "alloy-sol-types",
  "anyhow",
  "async-trait",
- "axum",
  "bincode",
  "cfg-if",
  "dirs",
  "ethers",
  "futures",
+ "getrandom",
  "hashbrown 0.14.5",
  "hex",
  "indicatif",
@@ -5720,8 +5927,10 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
- "sp1-core",
+ "sp1-core-executor",
+ "sp1-core-machine",
  "sp1-prover",
+ "sp1-stark",
  "strum 0.26.3",
  "strum_macros 0.26.4",
  "sysinfo",
@@ -5734,9 +5943,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "sp1-stark"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+dependencies = [
+ "arrayref",
+ "getrandom",
+ "hashbrown 0.14.5",
+ "itertools 0.13.0",
+ "p3-air",
+ "p3-baby-bear",
+ "p3-challenger",
+ "p3-commit",
+ "p3-dft",
+ "p3-field",
+ "p3-fri",
+ "p3-matrix",
+ "p3-maybe-rayon",
+ "p3-merkle-tree",
+ "p3-poseidon2",
+ "p3-symmetric",
+ "p3-uni-stark",
+ "p3-util",
+ "rayon-scan",
+ "serde",
+ "sp1-derive",
+ "sp1-primitives",
+ "tracing",
+]
+
+[[package]]
 name = "sp1-zkvm"
-version = "1.1.1"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0807#226bc0b541fed5b1b2d6e7a8533499cceeda2be3"
+version = "1.2.0-rc2"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
 dependencies = [
  "bincode",
  "cfg-if",
@@ -6515,6 +6754,12 @@ name = "vcpkg"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426"
+
+[[package]]
+name = "vec_map"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
 
 [[package]]
 name = "vergen"

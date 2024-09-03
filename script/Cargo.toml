@@ -26,11 +26,10 @@ name = "vkey"
 path = "src/bin/vkey.rs"
 
 [dependencies]
-# sp1-sdk = "1.1.0"
-sp1-sdk = { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0807" }
+sp1-sdk = { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0830" }
 
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
-serde = { version = "1.0", default-features = false, features = ["derive"] }
+serde = { version = "1.0.207", default-features = false, features = ["derive"] }
 clap = { version = "4.0", features = ["derive", "env"] }
 tracing = "0.1.40"
 hex = "0.4.3"
