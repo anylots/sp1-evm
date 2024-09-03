@@ -102,7 +102,11 @@ async fn main() {
         let start = Instant::now();
 
         // Setup the program for proving.
+        println!("=======Start setup.");
         let (pk, vk) = client.setup(FIBONACCI_ELF);
+
+        let duration_secs = start.elapsed().as_secs();
+        println!("=======End setup, time use: {:?} secs", duration_secs);
 
         // Generate the proof
         let proof = client
