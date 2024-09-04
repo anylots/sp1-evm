@@ -1,14 +1,19 @@
 [workspace]
 members = [
-    "lib",
-    "program",
-    "script",
+    "bin/host",
+    "bin/client",
+    "crates/stateless-block-verifier",
+    "crates/morph-executor"
 ]
 resolver = "2"
+
+
+
 
 [workspace.dependencies]
 alloy-sol-types = "0.7.7"
 serde_json = { version = "1.0" }
+stateless-block-verifier = { path = "./crates/stateless-block-verifier" }
 
 
 [patch."https://github.com/scroll-tech/zktrie"]

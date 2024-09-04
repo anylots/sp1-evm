@@ -635,7 +635,7 @@ dependencies = [
  "bitflags 2.6.0",
  "cexpr",
  "clang-sys",
- "itertools 0.12.1",
+ "itertools 0.11.0",
  "lazy_static",
  "lazycell",
  "log",
@@ -2038,78 +2038,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "evm-lib"
-version = "0.1.0"
-dependencies = [
- "alloy-sol-types",
- "anyhow",
- "async-channel",
- "clap",
- "csv",
- "ctor",
- "env_logger",
- "eth-types",
- "ethers-core 2.0.7",
- "ethers-providers 2.0.7",
- "futures",
- "getrandom",
- "hex",
- "http-body-util",
- "hyper 1.4.1",
- "hyper-util",
- "itertools 0.13.0",
- "mpt-zktrie",
- "once_cell",
- "pprof",
- "prometheus-client",
- "rand",
- "reqwest 0.12.5",
- "revm",
- "rkyv",
- "serde",
- "serde_json",
- "thiserror",
- "tiny-keccak",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "url",
- "zktrie",
-]
-
-[[package]]
-name = "evm-program"
-version = "0.1.0"
-dependencies = [
- "alloy-sol-types",
- "anyhow",
- "eth-types",
- "evm-lib",
- "serde",
- "serde_json",
- "sp1-zkvm",
- "tokio",
-]
-
-[[package]]
-name = "evm-script"
-version = "0.1.0"
-dependencies = [
- "alloy-sol-types",
- "anyhow",
- "clap",
- "eth-types",
- "evm-lib",
- "hex",
- "serde",
- "serde_json",
- "sp1-helper",
- "sp1-sdk",
- "tokio",
- "tracing",
-]
-
-[[package]]
 name = "eyre"
 version = "0.6.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3279,6 +3207,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "morph-executor"
+version = "0.1.0"
+
+[[package]]
+name = "morph-prover"
+version = "0.1.0"
+dependencies = [
+ "alloy-sol-types",
+ "anyhow",
+ "clap",
+ "eth-types",
+ "hex",
+ "serde",
+ "serde_json",
+ "sp1-helper",
+ "sp1-sdk",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "mpt-zktrie"
 version = "0.12.0"
 source = "git+https://github.com/scroll-tech/zkevm-circuits?branch=feat/sp1#e4ff96e862647ab1400fd6836b8e455f55571169"
@@ -4353,7 +4302,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "81bddcdb20abf9501610992b6759a4c888aef7d1a7247ef75e2404275ac24af1"
 dependencies = [
  "anyhow",
- "itertools 0.12.1",
+ "itertools 0.11.0",
  "proc-macro2",
  "quote",
  "syn 2.0.72",
@@ -6031,6 +5980,46 @@ dependencies = [
 ]
 
 [[package]]
+name = "stateless-block-verifier"
+version = "0.1.0"
+dependencies = [
+ "alloy-sol-types",
+ "anyhow",
+ "async-channel",
+ "clap",
+ "csv",
+ "ctor",
+ "env_logger",
+ "eth-types",
+ "ethers-core 2.0.7",
+ "ethers-providers 2.0.7",
+ "futures",
+ "getrandom",
+ "hex",
+ "http-body-util",
+ "hyper 1.4.1",
+ "hyper-util",
+ "itertools 0.13.0",
+ "mpt-zktrie",
+ "once_cell",
+ "pprof",
+ "prometheus-client",
+ "rand",
+ "reqwest 0.12.5",
+ "revm",
+ "rkyv",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tiny-keccak",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "url",
+ "zktrie",
+]
+
+[[package]]
 name = "static_assertions"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6772,6 +6761,20 @@ dependencies = [
  "git2",
  "rustversion",
  "time",
+]
+
+[[package]]
+name = "verifier-client"
+version = "0.1.0"
+dependencies = [
+ "alloy-sol-types",
+ "anyhow",
+ "eth-types",
+ "serde",
+ "serde_json",
+ "sp1-zkvm",
+ "stateless-block-verifier",
+ "tokio",
 ]
 
 [[package]]

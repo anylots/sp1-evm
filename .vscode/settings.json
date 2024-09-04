@@ -1,8 +1,4 @@
 {
-    "rust-analyzer.linkedProjects": [
-        "program/Cargo.toml",
-        "script/Cargo.toml"
-    ],
     "rust-analyzer.check.overrideCommand": [
         "cargo",
         "clippy",
@@ -13,6 +9,9 @@
         "--",
         "-A",
         "incomplete-features"
+    ],
+    "rust-analyzer.linkedProjects": [
+        "Cargo.toml",
     ],
     "rust-analyzer.runnables.extraEnv": {
         "RUST_LOG": "debug",
