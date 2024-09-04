@@ -6,4 +6,4 @@ COPY . /app
 WORKDIR /app
 RUN cd program && cargo prove build
 RUN cd script && cargo run --features="bin-deps" --release -- --execute
-RUN cd script && RUSTFLAGS="-C target-cpu=native -C target-feature=+avx512f" cargo run --features="bin-deps" --release -- --prove
+RUN cd script && cargo run --features="bin-deps" --release -- --prove

@@ -122,6 +122,7 @@ alloy-eips = { git = "https://github.com/scroll-tech/alloy.git", branch = "rustc
 primitive-types = { git = "https://github.com/scroll-tech/parity-common.git", branch = "feat/rkyv" }
 ethereum-types = { git = "https://github.com/scroll-tech/parity-common.git", branch = "feat/rkyv" }
 ff = { git = "https://github.com/scroll-tech/ff", branch = "feat/sp1" }
+tiny-keccak = { git = "https://github.com/sp1-patches/tiny-keccak", branch = "patch-v2.0.2" }
 
 # ethers-core = { path = "../ethers-rs/ethers-core" }
 # ethers-providers = { path = "../ethers-rs/ethers-providers" }
