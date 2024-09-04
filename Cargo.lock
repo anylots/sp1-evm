@@ -5496,8 +5496,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-core-executor"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "bincode",
  "bytemuck",
@@ -5531,8 +5531,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-core-machine"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "anyhow",
  "arrayref",
@@ -5596,8 +5596,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-curves"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "curve25519-dalek",
  "dashu",
@@ -5616,8 +5616,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-derive"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -5637,8 +5637,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-lib"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "anyhow",
  "bincode",
@@ -5650,8 +5650,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-primitives"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "itertools 0.13.0",
  "lazy_static",
@@ -5663,8 +5663,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-prover"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "anyhow",
  "bincode",
@@ -5702,8 +5702,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-recursion-circuit"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "bincode",
  "itertools 0.13.0",
@@ -5726,8 +5726,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-recursion-compiler"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "backtrace",
  "itertools 0.13.0",
@@ -5755,8 +5755,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-recursion-core"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "arrayref",
  "backtrace",
@@ -5792,8 +5792,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-recursion-core-v2"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "arrayref",
  "backtrace",
@@ -5832,8 +5832,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-recursion-derive"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -5842,8 +5842,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-recursion-gnark-ffi"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "anyhow",
  "bincode",
@@ -5868,8 +5868,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-recursion-program"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "itertools 0.13.0",
  "p3-air",
@@ -5899,8 +5899,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-sdk"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "alloy-sol-types",
  "anyhow",
@@ -5944,8 +5944,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-stark"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "arrayref",
  "getrandom",
@@ -5974,8 +5974,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-zkvm"
-version = "1.2.0-rc2"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#0329f4e351ef6922d11e92b2c71446ee6fe847c1"
+version = "1.2.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#9332c76b81ca8e2d81171e7763bef3a7ad2d262e"
 dependencies = [
  "bincode",
  "cfg-if",
