@@ -63,7 +63,7 @@ async fn main() {
     // Setup the prover client.
     let client = ProverClient::new();
 
-    let traces: Vec<Vec<BlockTrace>> = load_trace("../testdata/dev_tx.json");
+    let traces: Vec<Vec<BlockTrace>> = load_trace("../testdata/dev_tx_s.json");
 
     println!("traces_len: {}", traces[0].len());
 
