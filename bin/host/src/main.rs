@@ -29,9 +29,6 @@ struct Args {
 
     #[clap(long)]
     prove: bool,
-
-    #[clap(long, default_value = "20")]
-    n: u32,
 }
 
 use eth_types::l2_types::BlockTrace;
@@ -72,8 +69,6 @@ async fn main() {
     let mut stdin = SP1Stdin::new();
 
     stdin.write(&trace);
-
-    println!("n: {}", args.n);
 
     if args.execute {
         // Execute the program
