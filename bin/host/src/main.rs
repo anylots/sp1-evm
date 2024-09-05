@@ -80,18 +80,15 @@ async fn main() {
         let (output, report) = client.execute(STATELESS_VERIFIER_ELF, stdin).run().unwrap();
         println!("Program executed successfully.");
 
-        // // Read the output.
-        // let decoded = PublicValuesStruct::abi_decode(output.as_slice(), true).unwrap();
-        // let PublicValuesStruct { n, a, b } = decoded;
-        // println!("n: {}", n);
-        // println!("a: {}", a);
-        // println!("b: {}", b);
+        let pi_hash = output.as_slice();
+        println!("pi_hash executed in riscv-vm: {}", hex::encode(pi_hash));
 
-        // // let (expected_a, expected_b) =
-        // let rt = evm_lib::verify(trace_struct);
-        // // assert_eq!(a, expected_a);
-        // // assert_eq!(b, expected_b);
-        // println!("Values are correct!");
+        // let expected_hash = stateless_block_verifier::verify(&trace);
+        // println!("pi_hash executed in native: {}", hex::encode(expected_hash));
+
+        // assert_eq!(pi_hash, expected_hash);
+        // assert_eq!(a, expected_a);
+        println!("Values are correct!");
 
         // Record the number of cycles executed.
         println!("Number of cycles: {}", report.total_instruction_count());

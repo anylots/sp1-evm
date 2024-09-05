@@ -6,7 +6,7 @@
 //! RUST_LOG=info cargo run --release --bin evm
 //! ```
 
-use alloy_sol_types::SolType;
+// use alloy_sol_types::SolType;
 use clap::Parser;
 // use evm_lib::PublicValuesStruct;
 use serde::{Deserialize, Serialize};

@@ -3214,7 +3214,6 @@ version = "0.1.0"
 name = "morph-prover"
 version = "0.1.0"
 dependencies = [
- "alloy-sol-types",
  "anyhow",
  "clap",
  "eth-types",
@@ -5983,7 +5982,6 @@ dependencies = [
 name = "stateless-block-verifier"
 version = "0.1.0"
 dependencies = [
- "alloy-sol-types",
  "anyhow",
  "async-channel",
  "clap",
@@ -6767,7 +6765,6 @@ dependencies = [
 name = "verifier-client"
 version = "0.1.0"
 dependencies = [
- "alloy-sol-types",
  "anyhow",
  "eth-types",
  "serde",

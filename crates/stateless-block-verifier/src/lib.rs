@@ -4,6 +4,7 @@
 // #![deny(missing_docs)]
 #![deny(missing_debug_implementations)]
 
+use revm::primitives::keccak256;
 #[cfg(feature = "dev")]
 #[doc(hidden)]
 pub use tracing;
@@ -32,7 +33,7 @@ pub mod utils;
 use utils::ext::BlockZktrieExt;
 pub use utils::{post_check, BlockTraceExt};
 
-use eth_types::l2_types::BlockTrace;
+use eth_types::{l2_types::BlockTrace, H256};
 use mpt_zktrie::ZktrieState;
 
 /// Metrics module
@@ -51,25 +52,12 @@ fn init() {
         .init();
 }
 
-use alloy_sol_types::sol;
-
-sol! {
-    /// The public values encoded as a struct that can be easily deserialized inside Solidity.
-    struct PublicValuesStruct {
-        // n
-        uint32 n;
-        // a
-        uint32 a;
-        // b
-        uint32 b;
-    }
-}
-
-pub fn verify(l2_trace: &BlockTrace) -> Result<(), VerificationError> {
+pub fn verify(l2_trace: &BlockTrace) -> Result<H256, VerificationError> {
     let disable_checks = true;
     let mut fork_config = HardforkConfig::default_from_chain_id(534352);
     fork_config.set_curie_block(0);
 
+    let root_before = l2_trace.storage_trace.root_before;
     let root_after = l2_trace.storage_trace.root_after;
 
     let mut zktrie_state = cycle_track!(
@@ -97,10 +85,7 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<(), VerificationError> {
     // TODO: change to Result::inspect_err when sp1 toolchain >= 1.76
     #[allow(clippy::map_identity)]
     executor.handle_block(&l2_trace).map_err(|e| {
-        dev_error!(
-            "Error occurs when executing block {:?}: {e:?}",
-            l2_trace.header.hash.unwrap()
-        );
+        dev_error!("Error occurs when executing block {:?}: {e:?}", l2_trace.header.hash.unwrap());
 
         update_metrics_counter!(verification_error);
         e
@@ -109,8 +94,8 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<(), VerificationError> {
 
     // if root_after != revm_root_after {
     //     dev_error!(
-    //         "Block #{}({:?}) root mismatch: root after in trace = {root_after:x}, root after in revm = {revm_root_after:x}",
-    //         l2_trace.header.number.unwrap().as_u64(),
+    //         "Block #{}({:?}) root mismatch: root after in trace = {root_after:x}, root after in
+    // revm = {revm_root_after:x}",         l2_trace.header.number.unwrap().as_u64(),
     //         l2_trace.header.hash.unwrap()
     //     );
 
@@ -126,5 +111,7 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<(), VerificationError> {
         l2_trace.header.number.unwrap().as_u64(),
         l2_trace.header.hash.unwrap()
     );
-    Ok(())
+    let pi_hash = keccak256([root_before.as_bytes(), revm_root_after.as_bytes()].concat());
+
+    Ok(H256::from_slice(pi_hash.as_slice()))
 }

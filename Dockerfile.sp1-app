@@ -4,6 +4,6 @@ RUN cargo prove --version
 
 COPY . /app
 WORKDIR /app
-RUN cd program && cargo prove build
-RUN cd script && cargo run --features="bin-deps" --release -- --execute
-RUN cd script && cargo run --features="bin-deps" --release -- --prove
+RUN cd bin/client && cargo prove build
+RUN cd bin/host && cargo run --features="bin-deps" --release -- --execute
+RUN cd bin/host && cargo run --features="bin-deps" --release -- --prove
