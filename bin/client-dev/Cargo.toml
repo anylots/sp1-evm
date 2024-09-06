@@ -1,0 +1,10 @@
+[package]
+version = "0.1.0"
+name = "verifier-client-dev"
+edition = "2021"
+
+[dependencies]
+sp1-zkvm =  { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0830" }
+alloy-primitives = { version = "0.7.7", default-features = false, features = [
+    "rlp",
+] }

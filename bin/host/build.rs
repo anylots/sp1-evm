@@ -8,5 +8,14 @@ fn main() {
             output_directory: "bin/client/elf".to_string(),
             ..Default::default()
         },
+    );
+
+    build_program_with_args(
+        "../client-dev",
+        BuildArgs {
+            ignore_rust_version: true,
+            output_directory: "bin/client-dev/elf".to_string(),
+            ..Default::default()
+        },
     )
 }

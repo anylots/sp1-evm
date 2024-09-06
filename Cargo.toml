@@ -2,6 +2,7 @@
 members = [
     "bin/host",
     "bin/client",
+    "bin/client-dev",
     "crates/stateless-block-verifier",
     "crates/morph-executor"
 ]
