@@ -1,4 +1,5 @@
-use eth_types::{types::SignatureError, Address, H256};
+use ethers_core::types::{transaction::response::Transaction, Address, SignatureError, H256};
+
 use revm::primitives::EVMError;
 use std::convert::Infallible;
 

@@ -25,15 +25,16 @@ pub use error::VerificationError;
 mod executor;
 pub use executor::{hooks, EvmExecutor, EvmExecutorBuilder};
 
-mod hardfork;
-pub use hardfork::HardforkConfig;
+pub mod block_trace;
 
 /// Module for utilities.
 pub mod utils;
 use utils::ext::BlockZktrieExt;
 pub use utils::{post_check, BlockTraceExt};
 
-use eth_types::{l2_types::BlockTrace, H256};
+use block_trace::BlockTrace;
+use ethers_core::types::H256;
+
 use mpt_zktrie::ZktrieState;
 
 /// Metrics module
@@ -54,8 +55,6 @@ fn init() {
 
 pub fn verify(l2_trace: &BlockTrace) -> Result<H256, VerificationError> {
     let disable_checks = true;
-    let mut fork_config = HardforkConfig::default_from_chain_id(534352);
-    fork_config.set_curie_block(0);
 
     let root_before = l2_trace.storage_trace.root_before;
     let root_after = l2_trace.storage_trace.root_after;
@@ -71,7 +70,6 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<H256, VerificationError> {
     );
 
     let mut executor = EvmExecutorBuilder::new(&zktrie_state)
-        .hardfork_config(fork_config)
         .with_execute_hooks(|hooks| {
             let l2_trace = l2_trace.clone();
             if !disable_checks {

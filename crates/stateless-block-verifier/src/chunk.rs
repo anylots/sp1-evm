@@ -1,5 +1,6 @@
 use crate::BlockTraceExt;
-use eth_types::H256;
+use ethers_core::types::H256;
+
 use mpt_zktrie::ZktrieState;
 use tiny_keccak::{Hasher, Keccak};
 
@@ -24,10 +25,7 @@ impl ChunkInfo {
     /// Construct by block traces
     pub fn from_block_traces<T: BlockTraceExt>(traces: &[T]) -> (Self, ZktrieState) {
         let chain_id = traces.first().unwrap().chain_id();
-        let prev_state_root = traces
-            .first()
-            .expect("at least 1 block needed")
-            .root_before();
+        let prev_state_root = traces.first().expect("at least 1 block needed").root_before();
         let post_state_root = traces.last().expect("at least 1 block needed").root_after();
         let withdraw_root = traces.last().unwrap().withdraw_root();
 
@@ -46,13 +44,8 @@ impl ChunkInfo {
             trace.build_zktrie_state(&mut zktrie_state);
         }
 
-        let info = ChunkInfo {
-            chain_id,
-            prev_state_root,
-            post_state_root,
-            withdraw_root,
-            data_hash,
-        };
+        let info =
+            ChunkInfo { chain_id, prev_state_root, post_state_root, withdraw_root, data_hash };
 
         (info, zktrie_state)
     }

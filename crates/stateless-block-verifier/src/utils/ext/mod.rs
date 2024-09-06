@@ -1,4 +1,5 @@
-use eth_types::{Address, Transaction, H256};
+// use eth_types::{Address, Transaction, H256};
+use ethers_core::types::{transaction::response::Transaction, Address, H256};
 use mpt_zktrie::ZktrieState;
 use revm::primitives::{AccessListItem, TransactTo, TxEnv, B256, U256};
 use std::fmt::Debug;
@@ -132,12 +133,8 @@ pub trait BlockChunkExt: BlockTraceExt + BlockTraceRevmExt {
         let num_txs = (self.num_l1_txs() + self.num_l2_txs()) as u16;
         hasher.update(&self.number().to_be_bytes());
         hasher.update(&self.timestamp().to::<u64>().to_be_bytes());
-        hasher.update(
-            &self
-                .base_fee_per_gas()
-                .unwrap_or_default()
-                .to_be_bytes::<{ U256::BYTES }>(),
-        );
+        hasher
+            .update(&self.base_fee_per_gas().unwrap_or_default().to_be_bytes::<{ U256::BYTES }>());
         hasher.update(&self.gas_limit().to::<u64>().to_be_bytes());
         hasher.update(&num_txs.to_be_bytes());
     }
@@ -145,11 +142,7 @@ pub trait BlockChunkExt: BlockTraceExt + BlockTraceRevmExt {
     /// Hash the l1 messages of the block
     #[inline]
     fn hash_l1_msg(&self, hasher: &mut impl tiny_keccak::Hasher) {
-        for tx_hash in self
-            .transactions()
-            .filter(|tx| tx.is_l1_tx())
-            .map(|tx| tx.tx_hash())
-        {
+        for tx_hash in self.transactions().filter(|tx| tx.is_l1_tx()).map(|tx| tx.tx_hash()) {
             hasher.update(tx_hash.as_slice())
         }
     }
@@ -213,31 +206,30 @@ pub trait TxRevmExt {
     ) -> Transaction;
 }
 
-#[cfg(test)]
-mod tests {
-    use std::array;
-    use std::mem::transmute;
+// #[cfg(test)]
+// mod tests {
+//     use std::{array, mem::transmute};
 
-    #[test]
-    fn test_memory_layout() {
-        use eth_types::{ArchivedH160, H160};
-        // H160 and ArchivedH160 should have the same memory layout
-        assert_eq!(size_of::<H160>(), 20);
-        assert_eq!(size_of::<ArchivedH160>(), 20);
-        assert_eq!(size_of::<&[u8; 20]>(), size_of::<usize>());
-        assert_eq!(size_of::<&H160>(), size_of::<usize>());
-        assert_eq!(size_of::<&ArchivedH160>(), size_of::<usize>());
+//     #[test]
+//     fn test_memory_layout() {
+//         use eth_types::{ArchivedH160, H160};
+//         // H160 and ArchivedH160 should have the same memory layout
+//         assert_eq!(size_of::<H160>(), 20);
+//         assert_eq!(size_of::<ArchivedH160>(), 20);
+//         assert_eq!(size_of::<&[u8; 20]>(), size_of::<usize>());
+//         assert_eq!(size_of::<&H160>(), size_of::<usize>());
+//         assert_eq!(size_of::<&ArchivedH160>(), size_of::<usize>());
 
-        let h160 = eth_types::H160::from(array::from_fn(|i| i as u8));
-        let serialized = rkyv::to_bytes::<_, 20>(&h160).unwrap();
-        let archived: &ArchivedH160 = unsafe { rkyv::archived_root::<H160>(&serialized[..]) };
-        assert_eq!(archived.0, h160.0);
-        let ptr_to_archived: usize = archived as *const _ as usize;
-        let ptr_to_archived_inner: usize = (&archived.0) as *const _ as usize;
-        assert_eq!(ptr_to_archived, ptr_to_archived_inner);
-        let transmuted: &H160 = unsafe { transmute(archived) };
-        assert_eq!(transmuted, &h160);
-        let transmuted: &H160 = unsafe { transmute(&archived.0) };
-        assert_eq!(transmuted, &h160);
-    }
-}
+//         let h160 = eth_types::H160::from(array::from_fn(|i| i as u8));
+//         let serialized = rkyv::to_bytes::<_, 20>(&h160).unwrap();
+//         let archived: &ArchivedH160 = unsafe { rkyv::archived_root::<H160>(&serialized[..]) };
+//         assert_eq!(archived.0, h160.0);
+//         let ptr_to_archived: usize = archived as *const _ as usize;
+//         let ptr_to_archived_inner: usize = (&archived.0) as *const _ as usize;
+//         assert_eq!(ptr_to_archived, ptr_to_archived_inner);
+//         let transmuted: &H160 = unsafe { transmute(archived) };
+//         assert_eq!(transmuted, &h160);
+//         let transmuted: &H160 = unsafe { transmute(&archived.0) };
+//         assert_eq!(transmuted, &h160);
+//     }
+// }

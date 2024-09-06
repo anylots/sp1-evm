@@ -1,18 +1,16 @@
 use crate::{
+    block_trace::TxType,
     database::ReadOnlyDB,
-    error::VerificationError,
-    error::ZkTrieError,
+    error::{VerificationError, ZkTrieError},
     utils::ext::{BlockTraceRevmExt, TxRevmExt},
-    HardforkConfig,
 };
-use eth_types::{geth_types::TxType, H256, U256};
+use ethers_core::types::{H256, U256};
+
 use mpt_zktrie::{AccountData, ZktrieState};
-use revm::db::AccountState;
-use revm::precompile::B256;
-use revm::primitives::{KECCAK_EMPTY, POSEIDON_EMPTY};
 use revm::{
-    db::CacheDB,
-    primitives::{AccountInfo, Env, SpecId},
+    db::{AccountState, CacheDB},
+    precompile::B256,
+    primitives::{AccountInfo, Env, SpecId, KECCAK_EMPTY, POSEIDON_EMPTY},
 };
 use std::fmt::Debug;
 
@@ -25,7 +23,7 @@ pub mod hooks;
 
 /// EVM executor that handles the block.
 pub struct EvmExecutor {
-    hardfork_config: HardforkConfig,
+    // hardfork_config: HardforkConfig,
     db: CacheDB<ReadOnlyDB>,
     spec_id: SpecId,
     hooks: hooks::ExecuteHooks,
@@ -40,10 +38,7 @@ impl EvmExecutor {
     /// Update the DB
     pub fn update_db<T: BlockTraceExt>(&mut self, l2_trace: &T) -> Result<(), ZkTrieError> {
         self.db.db.invalidate_storage_root_caches(
-            self.db
-                .accounts
-                .iter()
-                .map(|(addr, acc)| (*addr, acc.account_state.clone())),
+            self.db.accounts.iter().map(|(addr, acc)| (*addr, acc.account_state.clone())),
         );
 
         self.db.db.update(l2_trace)
@@ -70,9 +65,7 @@ impl EvmExecutor {
         &mut self,
         l2_trace: &T,
     ) -> Result<(), VerificationError> {
-        self.hardfork_config
-            .migrate(l2_trace.number(), &mut self.db)
-            .unwrap();
+        // self.hardfork_config.migrate(l2_trace.number(), &mut self.db).unwrap();
 
         dev_debug!("handle block {:?}", l2_trace.number());
         let mut env = Box::<Env>::default();
@@ -101,12 +94,10 @@ impl EvmExecutor {
 
             if !tx_type.is_l1_msg() {
                 let recovered_address = cycle_track!(
-                    eth_tx
-                        .recover_from()
-                        .map_err(|source| VerificationError::SignerRecovery {
-                            tx_hash: eth_tx.hash,
-                            source,
-                        })?,
+                    eth_tx.recover_from().map_err(|source| VerificationError::SignerRecovery {
+                        tx_hash: eth_tx.hash,
+                        source,
+                    })?,
                     "recover address"
                 );
 
@@ -145,10 +136,7 @@ impl EvmExecutor {
 
                 let _result =
                     cycle_track!(revm.transact_commit(), "transact_commit").map_err(|e| {
-                        VerificationError::EvmExecution {
-                            tx_hash: eth_tx.hash,
-                            source: e,
-                        }
+                        VerificationError::EvmExecution { tx_hash: eth_tx.hash, source: e }
                     })?;
 
                 dev_trace!("{_result:#?}");
@@ -170,10 +158,7 @@ impl EvmExecutor {
     }
 
     fn commit_changes_inner(&mut self, zktrie_state: &mut ZktrieState) -> H256 {
-        let mut zktrie = zktrie_state
-            .zk_db
-            .new_trie(&zktrie_state.trie_root)
-            .expect("infallible");
+        let mut zktrie = zktrie_state.zk_db.new_trie(&zktrie_state.trie_root).expect("infallible");
 
         #[cfg(any(feature = "debug-account", feature = "debug-storage"))]
         let mut debug_recorder = crate::utils::debug::DebugRecorder::new();
@@ -238,9 +223,7 @@ impl EvmExecutor {
                 #[cfg(feature = "debug-storage")]
                 debug_recorder.record_storage_root(*addr, acc_data.storage_root);
 
-                self.db
-                    .db
-                    .set_prev_storage_root(*addr, acc_data.storage_root.0.into());
+                self.db.db.set_prev_storage_root(*addr, acc_data.storage_root.0.into());
             }
             if !info.is_empty() {
                 // if account not exist, all fields will be zero.
@@ -287,9 +270,6 @@ impl EvmExecutor {
 
 impl Debug for EvmExecutor {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("EvmExecutor")
-            .field("db", &self.db)
-            .field("spec_id", &self.spec_id)
-            .finish()
+        f.debug_struct("EvmExecutor").field("db", &self.db).field("spec_id", &self.spec_id).finish()
     }
 }

@@ -1,6 +1,10 @@
-use crate::utils::ext::*;
-use eth_types::l2_types::{BlockTrace, TransactionTrace};
-use eth_types::{Address, H256};
+use crate::{block_trace, utils::ext::*};
+// use eth_types::l2_types::{BlockTrace, TransactionTrace};
+use block_trace::{BlockTrace, TransactionTrace};
+
+// use eth_types::{Address, H256};
+use ethers_core::types::{Address, H256};
+
 use revm::primitives::{B256, U256};
 
 impl BlockTraceExt for BlockTrace {
@@ -21,53 +25,32 @@ impl BlockTraceExt for BlockTrace {
         if self.storage_trace.flatten_proofs.is_empty() {
             None
         } else {
-            Some(
-                self.storage_trace
-                    .flatten_proofs
-                    .iter()
-                    .map(|(k, v)| (k, v.as_ref())),
-            )
+            Some(self.storage_trace.flatten_proofs.iter().map(|(k, v)| (k, v.as_ref())))
         }
     }
     #[inline(always)]
     fn address_hashes(&self) -> impl Iterator<Item = (&Address, &H256)> {
-        self.storage_trace
-            .address_hashes
-            .iter()
-            .map(|(k, v)| (k, v))
+        self.storage_trace.address_hashes.iter().map(|(k, v)| (k, v))
     }
     #[inline(always)]
     fn store_key_hashes(&self) -> impl Iterator<Item = (&H256, &H256)> {
-        self.storage_trace
-            .store_key_hashes
-            .iter()
-            .map(|(k, v)| (k, v))
+        self.storage_trace.store_key_hashes.iter().map(|(k, v)| (k, v))
     }
     #[inline(always)]
     fn account_proofs(&self) -> impl Iterator<Item = (&Address, impl IntoIterator<Item = &[u8]>)> {
-        self.storage_trace
-            .proofs
-            .iter()
-            .map(|(addr, b)| (addr, b.iter().map(|b| b.as_ref())))
+        self.storage_trace.proofs.iter().map(|(addr, b)| (addr, b.iter().map(|b| b.as_ref())))
     }
     #[inline(always)]
     fn storage_proofs(
         &self,
     ) -> impl Iterator<Item = (&Address, &H256, impl IntoIterator<Item = &[u8]>)> {
-        self.storage_trace
-            .storage_proofs
-            .iter()
-            .flat_map(|(addr, map)| {
-                map.iter()
-                    .map(move |(sk, bts)| (addr, sk, bts.iter().map(|b| b.as_ref())))
-            })
+        self.storage_trace.storage_proofs.iter().flat_map(|(addr, map)| {
+            map.iter().map(move |(sk, bts)| (addr, sk, bts.iter().map(|b| b.as_ref())))
+        })
     }
     #[inline(always)]
     fn additional_proofs(&self) -> impl Iterator<Item = &[u8]> {
-        self.storage_trace
-            .deletion_proofs
-            .iter()
-            .map(|s| s.as_ref())
+        self.storage_trace.deletion_proofs.iter().map(|s| s.as_ref())
     }
     #[inline]
     fn codes(&self) -> impl ExactSizeIterator<Item = &[u8]> {
@@ -116,9 +99,7 @@ impl BlockTraceRevmExt for BlockTrace {
     }
     #[inline]
     fn prevrandao(&self) -> Option<B256> {
-        self.header
-            .mix_hash
-            .map(|h| revm::primitives::B256::from(h.0))
+        self.header.mix_hash.map(|h| revm::primitives::B256::from(h.0))
     }
     #[inline]
     fn transactions(&self) -> impl Iterator<Item = &Self::Tx> {

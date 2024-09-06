@@ -1,6 +1,7 @@
-use crate::utils::ext::TxRevmExt;
-use eth_types::l2_types::TransactionTrace;
-use eth_types::{Transaction, H256};
+use crate::{block_trace::TransactionTrace, utils::ext::TxRevmExt};
+// use eth_types::{Transaction, H256};
+use ethers_core::types::{transaction::response::Transaction, H256};
+
 use revm::primitives::{AccessListItem, TransactTo, B256, U256};
 
 mod archived_block_trace_v2;
@@ -86,7 +87,7 @@ impl TxRevmExt for TransactionTrace {
             Some(H256::from(block_hash.0)),
             Some(block_number.into()),
             Some((transaction_index as u64).into()),
-            base_fee_per_gas.map(|b| eth_types::U256(*b.as_limbs())),
+            base_fee_per_gas.map(|b| ethers_core::types::U256(*b.as_limbs())),
         )
     }
 }

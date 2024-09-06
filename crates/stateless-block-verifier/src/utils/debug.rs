@@ -1,4 +1,5 @@
-use eth_types::H256;
+use ethers_core::types::H256;
+
 use mpt_zktrie::AccountData;
 use revm::primitives::{Address, U256};
 use std::collections::BTreeMap;
@@ -39,23 +40,9 @@ impl DebugRecorder {
     pub fn record_storage(&mut self, addr: Address, key: U256, value: U256) {
         let entry = self.storages.entry(addr).or_default();
         if !value.is_zero() {
-            entry.insert(
-                key,
-                StorageOps {
-                    kind: "update",
-                    key,
-                    value: Some(value),
-                },
-            );
+            entry.insert(key, StorageOps { kind: "update", key, value: Some(value) });
         } else {
-            entry.insert(
-                key,
-                StorageOps {
-                    kind: "delete",
-                    key,
-                    value: None,
-                },
-            );
+            entry.insert(key, StorageOps { kind: "delete", key, value: None });
         }
     }
 }

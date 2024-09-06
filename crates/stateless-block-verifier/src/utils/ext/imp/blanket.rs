@@ -1,5 +1,5 @@
 use crate::utils::ext::*;
-use eth_types::{Address, Transaction, H256};
+use ethers_core::types::{transaction::response::Transaction, Address, H256};
 use revm::primitives::{AccessListItem, TransactTo, B256, U256};
 
 impl<T: BlockTraceExt> BlockTraceExt for &T {
@@ -175,12 +175,7 @@ impl<T: TxRevmExt> TxRevmExt for &T {
         transaction_index: usize,
         base_fee_per_gas: Option<U256>,
     ) -> Transaction {
-        (*self).to_eth_tx(
-            block_hash,
-            block_number,
-            transaction_index,
-            base_fee_per_gas,
-        )
+        (*self).to_eth_tx(block_hash, block_number, transaction_index, base_fee_per_gas)
     }
 }
 

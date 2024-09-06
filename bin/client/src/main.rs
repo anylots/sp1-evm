@@ -1,8 +1,8 @@
 #![no_main]
 sp1_zkvm::entrypoint!(main);
 
-use eth_types::l2_types::BlockTrace;
-use stateless_block_verifier::verify;
+// use eth_types::l2_types::BlockTrace;
+use stateless_block_verifier::{block_trace::BlockTrace, verify};
 
 pub fn main() {
     let x = sp1_zkvm::io::read::<String>();

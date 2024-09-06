@@ -12,7 +12,8 @@
     ],
     "rust-analyzer.linkedProjects": [
         "bin/client/Cargo.toml",
-        "bin/host/Cargo.toml"    ],
+        "bin/host/Cargo.toml",
+    ],
     "rust-analyzer.runnables.extraEnv": {
         "RUST_LOG": "debug",
         "RUSTFLAGS": "-Ctarget-cpu=native"

@@ -1,4 +1,5 @@
-use eth_types::l2_types::ExecutionResult;
+// use eth_types::l2_types::ExecutionResult;
+use crate::block_trace::ExecutionResult;
 
 use revm::DatabaseRef;
 use std::fmt::Debug;
@@ -18,11 +19,11 @@ pub trait BlockTraceExt:
 {
 }
 
-impl BlockTraceExt for eth_types::l2_types::BlockTrace {}
+impl BlockTraceExt for crate::block_trace::BlockTrace {}
 
-impl BlockTraceExt for eth_types::l2_types::BlockTraceV2 {}
+// impl BlockTraceExt for eth_types::l2_types::BlockTraceV2 {}
 
-impl BlockTraceExt for eth_types::l2_types::ArchivedBlockTraceV2 {}
+// impl BlockTraceExt for eth_types::l2_types::ArchivedBlockTraceV2 {}
 impl<T: BlockTraceExt> BlockTraceExt for &T {}
 
 /// Check the post state of the block with the execution result.
@@ -32,10 +33,7 @@ where
 {
     let mut ok = true;
     for account_post_state in exec.account_after.iter() {
-        let local_acc = db
-            .basic_ref(account_post_state.address.0.into())
-            .unwrap()
-            .unwrap();
+        let local_acc = db.basic_ref(account_post_state.address.0.into()).unwrap().unwrap();
 
         #[cfg(feature = "dev")]
         if tracing::enabled!(Level::TRACE) {
@@ -43,7 +41,7 @@ where
             local_acc.code = None;
             dev_trace!("local acc {local_acc:?}, trace acc {account_post_state:?}");
         }
-        let local_balance = eth_types::U256(*local_acc.balance.as_limbs());
+        let local_balance = ethers_core::types::U256(*local_acc.balance.as_limbs());
         if local_balance != account_post_state.balance {
             ok = false;
 
@@ -55,11 +53,7 @@ where
                 if local_balance < _post { "<" } else { ">" },
                 _post,
                 if local_balance < _post { "-" } else { "+" },
-                if local_balance < _post {
-                    _post - local_balance
-                } else {
-                    local_balance - _post
-                }
+                if local_balance < _post { _post - local_balance } else { local_balance - _post }
             )
         }
         if local_acc.nonce != account_post_state.nonce {
