@@ -1,6 +1,8 @@
 #![no_main]
 
-use alloy_primitives::keccak256;
+use alloy::primitives::keccak256;
+
+// use alloy_primitives::keccak256;
 sp1_zkvm::entrypoint!(main);
 
 pub fn main() {

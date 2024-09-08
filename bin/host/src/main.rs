@@ -28,8 +28,8 @@ struct Args {
     prove: bool,
 }
 
-use eth_types::H256;
-use stateless_block_verifier::block_trace::BlockTrace;
+use morph_executor::verify;
+use sbv_primitives::{types::BlockTrace, Block, B256};
 
 fn load_trace(file_path: &str) -> Vec<Vec<BlockTrace>> {
     use std::io::BufReader;
@@ -55,7 +55,7 @@ async fn main() {
 
     let traces: Vec<Vec<BlockTrace>> = load_trace("../../testdata/dev_tx_s.json");
     let trace_struct = &traces[0][0];
-    println!("traces post state_root: {:?}", trace_struct.header.state_root);
+    println!("traces post state_root: {:?}", trace_struct.root_after());
 
     let trace = serde_json::to_string(trace_struct).unwrap();
 
@@ -69,15 +69,12 @@ async fn main() {
         client.execute(STATELESS_VERIFIER_ELF, stdin.clone()).run().unwrap();
     println!("Program executed successfully.");
 
-    let pi_hash = public_values.read::<H256>();
-    println!("pi_hash generated with sp1-vm execution: {}", hex::encode(pi_hash.to_fixed_bytes()));
+    let pi_hash = public_values.read::<B256>();
+    println!("pi_hash generated with sp1-vm execution: {}", hex::encode(pi_hash.as_slice()));
 
     // Execute the program in native
-    let expected_hash = stateless_block_verifier::verify(trace_struct).unwrap_or_default();
-    println!(
-        "pi_hash generated with native execution: {}",
-        hex::encode(expected_hash.to_fixed_bytes())
-    );
+    let expected_hash = verify(trace_struct).unwrap_or_default();
+    println!("pi_hash generated with native execution: {}", hex::encode(expected_hash.as_slice()));
 
     assert_eq!(pi_hash, expected_hash);
     println!("Values are correct!");

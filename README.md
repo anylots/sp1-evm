@@ -13,7 +13,7 @@ that can generate a proof of any RISC-V program.
 There are three main ways to run this project: execute a program, generate a core proof, and
 generate an EVM-compatible proof.
 
-RUST_BACKTRACE=full cargo run --features="bin-deps" --release -- --execute
+RUST_BACKTRACE=full cargo run --release -- --execute
 
 
 ### Build the Program
@@ -35,7 +35,7 @@ To run the program without generating a proof:
 
 ```sh
 cd script
-RUST_BACKTRACE=full cargo run --features="bin-deps" --release -- --execute
+RUST_BACKTRACE=full cargo run --release -- --execute
 ```
 
 This will execute the program and display the output.
@@ -46,7 +46,7 @@ To generate a core proof for your program:
 
 ```sh
 cd script
-RUST_BACKTRACE=full cargo run --features="bin-deps" --release -- --prove
+RUST_BACKTRACE=full cargo run --release -- --prove
 ```
 
 ### Generate an EVM-Compatible (PLONK) Proof
