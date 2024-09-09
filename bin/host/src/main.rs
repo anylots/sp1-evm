@@ -1,5 +1,5 @@
 use morph_prover::prove;
 
 fn main() {
-    prove("../../testdata/dev_tx.json");
+    prove("../../testdata/0x7ea4fb.json");
 }
