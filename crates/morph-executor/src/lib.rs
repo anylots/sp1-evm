@@ -18,7 +18,7 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<B256, VerificationError> {
     let root_before = l2_trace.root_before();
     let root_after = l2_trace.root_after();
 
-    let fork_config: HardforkConfig = HardforkConfig::default_from_chain_id(53077);
+    let fork_config: HardforkConfig = HardforkConfig::default_from_chain_id(534352);
 
     // or with v2 trace
     // let v2_trace = BlockTraceV2::from(l2_trace.clone());
@@ -75,20 +75,21 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<B256, VerificationError> {
         dev_info!("Profiling report saved to: {:?}", path);
     }
 
-    // if root_after != revm_root_after {
-    //     dev_error!(
-    //         "Block #{}({:?}) root mismatch: root after in trace = {root_after:x}, root after in
-    // revm = {revm_root_after:x}",         l2_trace.number(),
-    //         l2_trace.block_hash(),
-    //     );
+    if root_after != revm_root_after {
+        dev_error!(
+            "Block #{}({:?}) root mismatch: root after in trace = {root_after:x}, root after in
+    revm = {revm_root_after:x}",
+            l2_trace.number(),
+            l2_trace.block_hash(),
+        );
 
-    //     update_metrics_counter!(verification_error);
+        update_metrics_counter!(verification_error);
 
-    //     return Err(VerificationError::RootMismatch {
-    //         root_trace: root_after,
-    //         root_revm: revm_root_after,
-    //     });
-    // }
+        return Err(VerificationError::RootMismatch {
+            root_trace: root_after,
+            root_revm: revm_root_after,
+        });
+    }
     dev_info!("Block #{}({}) verified successfully", l2_trace.number(), l2_trace.block_hash(),);
     let pi_hash =
         keccak256([versioned_hash, root_before.to_vec(), revm_root_after.to_vec()].concat());
