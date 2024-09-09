@@ -106,10 +106,10 @@ impl EvmExecutor<'_> {
             if tx.is_l1_msg() {
                 env.cfg.disable_base_fee = true; // disable base fee for l1 msg
             }
-            env.tx.morph.is_l1_msg = tx.is_l1_msg();
+            env.tx.scroll.is_l1_msg = tx.is_l1_msg();
             let rlp_bytes = tx.rlp();
             self.hooks.tx_rlp(self, &rlp_bytes);
-            env.tx.morph.rlp_bytes = Some(rlp_bytes);
+            env.tx.scroll.rlp_bytes = Some(rlp_bytes);
 
             dev_trace!("{env:#?}");
             {
