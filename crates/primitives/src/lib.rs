@@ -6,8 +6,7 @@ use alloy::{
     eips::eip2930::AccessList,
     primitives::{Bytes, ChainId, Signature, SignatureError, TxKind},
 };
-use std::fmt::Debug;
-use std::sync::Once;
+use std::{fmt::Debug, sync::Once};
 use zktrie::ZkMemoryDb;
 
 /// Predeployed contracts
@@ -15,10 +14,12 @@ pub mod predeployed;
 /// Types definition
 pub mod types;
 
-pub use alloy::consensus as alloy_consensus;
-pub use alloy::consensus::Transaction;
-pub use alloy::primitives as alloy_primitives;
-pub use alloy::primitives::{Address, B256, U256};
+pub use alloy::{
+    consensus as alloy_consensus,
+    consensus::Transaction,
+    primitives as alloy_primitives,
+    primitives::{Address, B256, U256},
+};
 pub use zktrie as zk_trie;
 
 /// Initialize the hash scheme for zkTrie.
@@ -87,8 +88,9 @@ pub trait Block: Debug {
     /// Update zktrie state from trace
     #[inline]
     fn build_zktrie_db(&self, zktrie_db: &mut ZkMemoryDb) {
-        for (k, bytes) in self.flatten_proofs() {
-            zktrie_db.add_node_bytes(bytes, Some(k.as_slice())).unwrap();
+        init_hash_scheme();
+        for (_, bytes) in self.flatten_proofs() {
+            zktrie_db.add_node_bytes(bytes, None).unwrap();
         }
     }
 
@@ -122,12 +124,8 @@ pub trait Block: Debug {
         let num_txs = (self.num_l1_txs() + self.num_l2_txs()) as u16;
         hasher.update(&self.number().to_be_bytes());
         hasher.update(&self.timestamp().to::<u64>().to_be_bytes());
-        hasher.update(
-            &self
-                .base_fee_per_gas()
-                .unwrap_or_default()
-                .to_be_bytes::<{ U256::BYTES }>(),
-        );
+        hasher
+            .update(&self.base_fee_per_gas().unwrap_or_default().to_be_bytes::<{ U256::BYTES }>());
         hasher.update(&self.gas_limit().to::<u64>().to_be_bytes());
         hasher.update(&num_txs.to_be_bytes());
     }
@@ -135,11 +133,7 @@ pub trait Block: Debug {
     /// Hash the l1 messages of the block
     #[inline]
     fn hash_l1_msg(&self, hasher: &mut impl tiny_keccak::Hasher) {
-        for tx_hash in self
-            .transactions()
-            .filter(|tx| tx.is_l1_tx())
-            .map(|tx| tx.tx_hash())
-        {
+        for tx_hash in self.transactions().filter(|tx| tx.is_l1_tx()).map(|tx| tx.tx_hash()) {
             hasher.update(tx_hash.as_slice())
         }
     }
