@@ -10,7 +10,7 @@ use sbv_utils::{
 pub fn verify(l2_trace: &BlockTrace) -> Result<B256, VerificationError> {
     dev_trace!("{l2_trace:#?}");
 
-    // Step1: Assemble the blob and calculate the versionedhash
+    // Step1: verify blob
     // TODO
     let versioned_hash: Vec<u8> = vec![];
 

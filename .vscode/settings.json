@@ -19,8 +19,7 @@
         "RUSTFLAGS": "-Ctarget-cpu=native"
     },
     "rust-analyzer.runnables.extraArgs": [
-        "--release",
-        "+nightly"
+        "--release"
     ],
     "rust-analyzer.diagnostics.disabled": [
         "unresolved-proc-macro"

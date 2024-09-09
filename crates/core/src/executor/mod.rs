@@ -1,13 +1,16 @@
-use crate::{database::ReadOnlyDB, error::VerificationError, error::ZkTrieError, HardforkConfig};
-use revm::db::AccountState;
-use revm::primitives::{BlockEnv, TxEnv, U256};
+use crate::{
+    database::ReadOnlyDB,
+    error::{VerificationError, ZkTrieError},
+    HardforkConfig,
+};
 use revm::{
-    db::CacheDB,
-    primitives::{AccountInfo, Env, SpecId, B256, KECCAK_EMPTY, POSEIDON_EMPTY},
+    db::{AccountState, CacheDB},
+    primitives::{
+        AccountInfo, BlockEnv, Env, SpecId, TxEnv, B256, KECCAK_EMPTY, POSEIDON_EMPTY, U256,
+    },
 };
 use sbv_primitives::{zk_trie::ZkMemoryDb, Block, Transaction, TxTrace};
-use std::fmt::Debug;
-use std::rc::Rc;
+use std::{fmt::Debug, rc::Rc};
 
 mod builder;
 pub use builder::EvmExecutorBuilder;
@@ -32,10 +35,7 @@ impl EvmExecutor<'_> {
     /// Update the DB
     pub fn update_db<T: Block>(&mut self, l2_trace: &T) -> Result<(), ZkTrieError> {
         self.db.db.invalidate_storage_root_caches(
-            self.db
-                .accounts
-                .iter()
-                .map(|(addr, acc)| (*addr, acc.account_state.clone())),
+            self.db.accounts.iter().map(|(addr, acc)| (*addr, acc.account_state.clone())),
         );
 
         self.db.db.update(l2_trace)
@@ -56,9 +56,7 @@ impl EvmExecutor<'_> {
 
     #[inline(always)]
     fn handle_block_inner<T: Block>(&mut self, l2_trace: &T) -> Result<(), VerificationError> {
-        self.hardfork_config
-            .migrate(l2_trace.number(), &mut self.db)
-            .unwrap();
+        self.hardfork_config.migrate(l2_trace.number(), &mut self.db).unwrap();
 
         dev_debug!("handle block {:?}", l2_trace.number());
         let mut env = Box::<Env>::default();
@@ -79,37 +77,26 @@ impl EvmExecutor<'_> {
 
             dev_trace!("handle {idx}th tx");
 
-            let tx = tx
-                .try_build_typed_tx()
-                .map_err(|e| VerificationError::InvalidSignature {
-                    tx_hash: tx.tx_hash(),
-                    source: e,
-                })?;
+            let tx = tx.try_build_typed_tx().map_err(|e| VerificationError::InvalidSignature {
+                tx_hash: tx.tx_hash(),
+                source: e,
+            })?;
 
             dev_trace!("{tx:#?}");
             let mut env = env.clone();
             env.tx = TxEnv {
                 caller: tx.get_or_recover_signer().map_err(|e| {
-                    VerificationError::InvalidSignature {
-                        tx_hash: *tx.tx_hash(),
-                        source: e,
-                    }
+                    VerificationError::InvalidSignature { tx_hash: *tx.tx_hash(), source: e }
                 })?,
                 gas_limit: tx.gas_limit() as u64,
                 gas_price: tx
                     .effective_gas_price(l2_trace.base_fee_per_gas().unwrap_or_default().to())
                     .map(U256::from)
-                    .ok_or_else(|| VerificationError::InvalidGasPrice {
-                        tx_hash: *tx.tx_hash(),
-                    })?,
+                    .ok_or_else(|| VerificationError::InvalidGasPrice { tx_hash: *tx.tx_hash() })?,
                 transact_to: tx.to(),
                 value: tx.value(),
                 data: tx.data(),
-                nonce: if !tx.is_l1_msg() {
-                    Some(tx.nonce())
-                } else {
-                    None
-                },
+                nonce: if !tx.is_l1_msg() { Some(tx.nonce()) } else { None },
                 chain_id: tx.chain_id(),
                 access_list: tx.access_list().cloned().unwrap_or_default().0,
                 gas_priority_fee: tx.max_priority_fee_per_gas().map(U256::from),
@@ -119,10 +106,10 @@ impl EvmExecutor<'_> {
             if tx.is_l1_msg() {
                 env.cfg.disable_base_fee = true; // disable base fee for l1 msg
             }
-            env.tx.scroll.is_l1_msg = tx.is_l1_msg();
+            env.tx.morph.is_l1_msg = tx.is_l1_msg();
             let rlp_bytes = tx.rlp();
             self.hooks.tx_rlp(self, &rlp_bytes);
-            env.tx.scroll.rlp_bytes = Some(rlp_bytes);
+            env.tx.morph.rlp_bytes = Some(rlp_bytes);
 
             dev_trace!("{env:#?}");
             {
@@ -141,10 +128,7 @@ impl EvmExecutor<'_> {
 
                 let _result =
                     cycle_track!(revm.transact_commit(), "transact_commit").map_err(|e| {
-                        VerificationError::EvmExecution {
-                            tx_hash: *tx.tx_hash(),
-                            source: e,
-                        }
+                        VerificationError::EvmExecution { tx_hash: *tx.tx_hash(), source: e }
                     })?;
 
                 dev_trace!("{_result:#?}");
@@ -166,9 +150,8 @@ impl EvmExecutor<'_> {
     }
 
     fn commit_changes_inner(&mut self, zktrie_db: &Rc<ZkMemoryDb>) -> B256 {
-        let mut zktrie = zktrie_db
-            .new_trie(&self.db.db.committed_zktrie_root())
-            .expect("infallible");
+        let mut zktrie =
+            zktrie_db.new_trie(&self.db.db.committed_zktrie_root()).expect("infallible");
 
         #[cfg(any(feature = "debug-account", feature = "debug-storage"))]
         let mut debug_recorder = sbv_utils::DebugRecorder::new();
@@ -292,9 +275,6 @@ impl EvmExecutor<'_> {
 
 impl Debug for EvmExecutor<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("EvmExecutor")
-            .field("db", &self.db)
-            .field("spec_id", &self.spec_id)
-            .finish()
+        f.debug_struct("EvmExecutor").field("db", &self.db).field("spec_id", &self.spec_id).finish()
     }
 }

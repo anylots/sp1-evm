@@ -10,8 +10,7 @@
 use clap::Parser;
 // use evm_lib::PublicValuesStruct;
 use serde::{Deserialize, Serialize};
-use sp1_sdk::{HashableKey, ProverClient, SP1ProofWithPublicValues, SP1Stdin, SP1VerifyingKey};
-use std::path::PathBuf;
+use sp1_sdk::{ProverClient, SP1ProofWithPublicValues, SP1Stdin, SP1VerifyingKey};
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
 pub const STATELESS_VERIFIER_ELF: &[u8] =

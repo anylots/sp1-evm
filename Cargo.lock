@@ -3194,6 +3194,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "keccak256-client"
+version = "0.1.0"
+dependencies = [
+ "alloy",
+ "sp1-zkvm",
+]
+
+[[package]]
+name = "keccak256-host"
+version = "0.1.0"
+dependencies = [
+ "hex",
+ "sp1-helper",
+ "sp1-sdk",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4735,7 +4752,7 @@ dependencies = [
 [[package]]
 name = "revm"
 version = "14.0.0"
-source = "git+https://github.com/scroll-tech/revm?branch=scroll-evm-executor/feat/v42/sp1#c255ca289d444d5601ed052f3a0e7e45fc2c075c"
+source = "git+https://github.com/morph-l2/revm?branch=morph-update#3886c00559f3f1a4e7414124817f2b3f5d912622"
 dependencies = [
  "auto_impl",
  "cfg-if",
@@ -4749,7 +4766,7 @@ dependencies = [
 [[package]]
 name = "revm-interpreter"
 version = "10.0.0"
-source = "git+https://github.com/scroll-tech/revm?branch=scroll-evm-executor/feat/v42/sp1#c255ca289d444d5601ed052f3a0e7e45fc2c075c"
+source = "git+https://github.com/morph-l2/revm?branch=morph-update#3886c00559f3f1a4e7414124817f2b3f5d912622"
 dependencies = [
  "cfg-if",
  "revm-primitives",
@@ -4759,7 +4776,7 @@ dependencies = [
 [[package]]
 name = "revm-precompile"
 version = "11.0.0"
-source = "git+https://github.com/scroll-tech/revm?branch=scroll-evm-executor/feat/v42/sp1#c255ca289d444d5601ed052f3a0e7e45fc2c075c"
+source = "git+https://github.com/morph-l2/revm?branch=morph-update#3886c00559f3f1a4e7414124817f2b3f5d912622"
 dependencies = [
  "aurora-engine-modexp",
  "c-kzg",
@@ -4776,7 +4793,7 @@ dependencies = [
 [[package]]
 name = "revm-primitives"
 version = "9.0.0"
-source = "git+https://github.com/scroll-tech/revm?branch=scroll-evm-executor/feat/v42/sp1#c255ca289d444d5601ed052f3a0e7e45fc2c075c"
+source = "git+https://github.com/morph-l2/revm?branch=morph-update#3886c00559f3f1a4e7414124817f2b3f5d912622"
 dependencies = [
  "alloy-eips",
  "alloy-primitives 0.8.0",
@@ -4787,7 +4804,6 @@ dependencies = [
  "cfg-if",
  "dyn-clone",
  "enumn",
- "getrandom",
  "hashbrown 0.14.5",
  "hex",
  "poseidon-bn254",
@@ -6806,14 +6822,6 @@ dependencies = [
  "sbv-primitives",
  "serde",
  "serde_json",
- "sp1-zkvm",
-]
-
-[[package]]
-name = "verifier-client-dev"
-version = "0.1.0"
-dependencies = [
- "alloy",
  "sp1-zkvm",
 ]
 

@@ -5,8 +5,8 @@ fn main() {
         "../client",
         BuildArgs {
             ignore_rust_version: true,
-            output_directory: "bin/client/elf".to_string(),
+            output_directory: "tests/keccak256/client/elf".to_string(),
             ..Default::default()
         },
-    );
+    )
 }

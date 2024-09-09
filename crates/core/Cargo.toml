@@ -1,6 +1,6 @@
 [package]
 name = "sbv-core"
-homepage = "https://github.com/scroll-tech/stateless-block-verifier/tree/master/crates/core"
+homepage = "https://github.com/morph-l2/morph/tree/main/prover"
 
 version.workspace = true
 edition.workspace = true

@@ -1,8 +1,8 @@
 [package]
 version = "0.1.0"
-name = "verifier-client-dev"
+name = "keccak256-client"
 edition = "2021"
 
 [dependencies]
-sp1-zkvm =  { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0830" }
+sp1-zkvm = { workspace = true }
 alloy = { workspace = true, features = ["consensus", "eips", "k256", "rlp", "rkyv", "serde"] }

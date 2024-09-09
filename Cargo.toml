@@ -2,8 +2,8 @@
 members = [
     "bin/host",
     "bin/client",
-    "bin/client-dev",
-    "crates/*"
+    "crates/*",
+    "tests/*/*"
 ]
 resolver = "2"
 
@@ -18,6 +18,7 @@ repository = "https://github.com/morph-l2/morph/tree/main/prover"
 
 
 
+
 [workspace.dependencies]
 alloy = "0.3"
 hex = "0.4"
@@ -26,6 +27,9 @@ rkyv = { version = "0.7", features = ["validation"] }
 thiserror = "1.0"
 tiny-keccak = "2.0"
 getrandom = { version = "*", features = ["custom"] } # just for disable
+
+sp1-zkvm =  { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0830" }
+sp1-sdk = { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0830" }
 
 # dependencies from scroll-tech
 poseidon-bn254 = { git = "https://github.com/scroll-tech/poseidon-bn254", branch = "master", features = ["bn254"] }
@@ -67,26 +71,27 @@ sbv-utils = { path = "crates/utils" }
 morph-executor = { path = "crates/morph-executor" }
 
 [workspace.dependencies.revm] # v42
-git = "https://github.com/scroll-tech/revm"
-branch = "scroll-evm-executor/feat/v42/sp1"
+git = "https://github.com/morph-l2/revm"
+branch = "morph-update"
 default-features = false
 features = [
-    "scroll-default-handler",
-    "scroll-poseidon-codehash",
+    "morph-default-handler",
+    "morph-poseidon-codehash",
     "std",
     "optional_no_base_fee"
 ]
 
 [workspace.dependencies.revm-primitives] # v42
-git = "https://github.com/scroll-tech/revm"
-branch = "scroll-evm-executor/v42"
+git = "https://github.com/morph-l2/revm"
+branch = "release/v42"
 default-features = false
 features = [
-    "scroll-default-handler",
-    "scroll-poseidon-codehash",
+    "morph-default-handler",
+    "morph-poseidon-codehash",
     "std",
     "optional_no_base_fee"
 ]
+
 
 [workspace.lints.rust]
 missing-docs = "deny"

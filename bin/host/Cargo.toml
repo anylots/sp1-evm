@@ -2,12 +2,11 @@
 version = "0.1.0"
 name = "morph-prover"
 edition = "2021"
-default-run = "revm"
+default-run = "prover"
 
 [[bin]]
-name = "revm"
+name = "prover"
 path = "src/main.rs"
-
 
 
 [[bin]]
@@ -19,7 +18,7 @@ name = "vkey"
 path = "src/vkey.rs"
 
 [dependencies]
-sp1-sdk = { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0830" }
+sp1-sdk = { workspace = true }
 
 anyhow.workspace = true
 serde = { workspace = true }
