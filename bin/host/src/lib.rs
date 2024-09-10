@@ -33,15 +33,15 @@ pub fn prove_for_queue() {}
 
 pub fn prove(trace_path: &str) {
     // Setup the logger.
-    // sp1_sdk::utils::setup_logger();
+    sp1_sdk::utils::setup_logger();
 
     // Parse the command line arguments.
     let args = Args::parse();
 
     let mut traces: Vec<Vec<BlockTrace>> = load_trace(trace_path);
     let block_trace: &mut BlockTrace = &mut traces[0][1];
-    log::info!("traces' post_state_root: {:?}", block_trace.root_after());
-    log::info!(
+    println!("traces' post_state_root: {:?}", block_trace.root_after());
+    println!(
         "traces' transactions.len(): {:?}",
         block_trace.transactions.len()
     );
@@ -49,7 +49,7 @@ pub fn prove(trace_path: &str) {
 
     // Execute the program in native
     let expected_hash = verify(block_trace).unwrap_or_default();
-    log::info!(
+    println!(
         "pi_hash generated with native execution: {}",
         hex::encode(expected_hash.as_slice())
     );
@@ -66,19 +66,19 @@ pub fn prove(trace_path: &str) {
         .execute(STATELESS_VERIFIER_ELF, stdin.clone())
         .run()
         .unwrap();
-    log::info!("Program executed successfully.");
+    println!("Program executed successfully.");
 
     let pi_hash = public_values.read::<B256>();
-    log::info!(
+    println!(
         "pi_hash generated with sp1-vm execution: {}",
         hex::encode(pi_hash.as_slice())
     );
 
     assert_eq!(pi_hash, expected_hash);
-    log::info!("Values are correct!");
+    println!("Values are correct!");
 
     // Record the number of cycles executed.
-    log::info!(
+    println!(
         "Number of cycles: {}",
         execution_report.total_instruction_count()
     );
@@ -95,13 +95,13 @@ pub fn prove(trace_path: &str) {
             .expect("failed to generate proof");
 
         let duration_mins = start.elapsed().as_secs() / 60;
-        log::info!(
+        println!(
             "Successfully generated proof!, time use: {:?} minutes",
             duration_mins
         );
 
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");
-        log::info!("Successfully verified proof!");
+        println!("Successfully verified proof!");
     }
 }

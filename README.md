@@ -6,13 +6,6 @@ Generate zk proof for the l2 batch.
 - [Rust](https://rustup.rs/)
 - [SP1](https://succinctlabs.github.io/sp1/getting-started/install.html)
 
-## Running the Project
-
-There are three main ways to run this project: execute a program, generate a core proof, and
-generate an EVM-compatible proof.
-
-RUST_BACKTRACE=full cargo run --release -- --execute
-
 
 ### Build the Program
 

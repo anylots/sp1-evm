@@ -26,8 +26,8 @@ serde_json = { workspace = true }
 hex = { workspace = true }
 tokio = { workspace = true }
 clap = { workspace = true }
-log = { workspace = true }
-env_logger = { workspace = true }
+#log = { workspace = true }
+#env_logger = { workspace = true }
 
 
 # workspace
