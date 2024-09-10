@@ -47,8 +47,9 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<B256, VerificationError> {
         "build ZktrieState"
     );
 
-    let mut executor =
-        EvmExecutorBuilder::new(zktrie_db.clone()).hardfork_config(fork_config).build(&l2_trace)?;
+    let mut executor = EvmExecutorBuilder::new(zktrie_db.clone())
+        .hardfork_config(fork_config)
+        .build(&l2_trace)?;
 
     // TODO: change to Result::inspect_err when sp1 toolchain >= 1.76
     #[allow(clippy::map_identity)]
@@ -67,7 +68,9 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<B256, VerificationError> {
 
     #[cfg(feature = "profiling")]
     if let Ok(report) = guard.report().build() {
-        let dir = std::env::temp_dir().join(env!("CARGO_PKG_NAME")).join("profiling");
+        let dir = std::env::temp_dir()
+            .join(env!("CARGO_PKG_NAME"))
+            .join("profiling");
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join(format!("block-{}.svg", l2_trace.number()));
         let file = std::fs::File::create(&path).unwrap();
@@ -90,9 +93,19 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<B256, VerificationError> {
             root_revm: revm_root_after,
         });
     }
-    dev_info!("Block #{}({}) verified successfully", l2_trace.number(), l2_trace.block_hash(),);
-    let pi_hash =
-        keccak256([versioned_hash, root_before.to_vec(), revm_root_after.to_vec()].concat());
+    dev_info!(
+        "Block #{}({}) verified successfully",
+        l2_trace.number(),
+        l2_trace.block_hash(),
+    );
+    let pi_hash = keccak256(
+        [
+            versioned_hash,
+            root_before.to_vec(),
+            revm_root_after.to_vec(),
+        ]
+        .concat(),
+    );
 
     Ok(B256::from_slice(pi_hash.as_slice()))
 }
