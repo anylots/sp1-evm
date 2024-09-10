@@ -51,34 +51,57 @@ pub fn prove(trace_path: &str) {
     let args = Args::parse();
 
     // Setup the prover client.
-    let client = ProverClient::new();
 
-    let traces: Vec<Vec<BlockTrace>> = load_trace(trace_path);
-    let trace_struct = &traces[0][0];
+    let mut traces: Vec<Vec<BlockTrace>> = load_trace(trace_path);
+    let trace_struct: &mut BlockTrace = &mut traces[0][0];
     println!("traces' post_state_root: {:?}", trace_struct.root_after());
+    let st = trace_struct.storage_trace.clone();
+    println!(
+        "traces' flatten_proofs last address: {:?}",
+        st.proofs.unwrap().first().unwrap().0
+    );
+
+    trace_struct.flatten();
+    println!(
+        "traces' flatten_proofs last address: {:?}",
+        trace_struct.flatten_proofs().last().unwrap().0
+    );
+
     let trace_str = serde_json::to_string(trace_struct).unwrap();
 
+    // Execute the program in native
+    let expected_hash = verify(trace_struct).unwrap_or_default();
+    println!(
+        "pi_hash generated with native execution: {}",
+        hex::encode(expected_hash.as_slice())
+    );
+
+    let client = ProverClient::new();
     // Setup the inputs.
     let mut stdin = SP1Stdin::new();
     stdin.write(&trace_str);
 
     // Execute the program in sp1-vm
-    let (mut public_values, execution_report) =
-        client.execute(STATELESS_VERIFIER_ELF, stdin.clone()).run().unwrap();
+    let (mut public_values, execution_report) = client
+        .execute(STATELESS_VERIFIER_ELF, stdin.clone())
+        .run()
+        .unwrap();
     println!("Program executed successfully.");
 
     let pi_hash = public_values.read::<B256>();
-    println!("pi_hash generated with sp1-vm execution: {}", hex::encode(pi_hash.as_slice()));
-
-    // Execute the program in native
-    let expected_hash = verify(trace_struct).unwrap_or_default();
-    println!("pi_hash generated with native execution: {}", hex::encode(expected_hash.as_slice()));
+    println!(
+        "pi_hash generated with sp1-vm execution: {}",
+        hex::encode(pi_hash.as_slice())
+    );
 
     assert_eq!(pi_hash, expected_hash);
     println!("Values are correct!");
 
     // Record the number of cycles executed.
-    println!("Number of cycles: {}", execution_report.total_instruction_count());
+    println!(
+        "Number of cycles: {}",
+        execution_report.total_instruction_count()
+    );
     if args.prove {
         let start = Instant::now();
 
@@ -86,10 +109,16 @@ pub fn prove(trace_path: &str) {
         let (pk, vk) = client.setup(STATELESS_VERIFIER_ELF);
 
         // Generate the proof
-        let proof = client.prove(&pk, stdin).run().expect("failed to generate proof");
+        let proof = client
+            .prove(&pk, stdin)
+            .run()
+            .expect("failed to generate proof");
 
         let duration_mins = start.elapsed().as_secs() / 60;
-        println!("Successfully generated proof!, time use: {:?} minutes", duration_mins);
+        println!(
+            "Successfully generated proof!, time use: {:?} minutes",
+            duration_mins
+        );
 
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");

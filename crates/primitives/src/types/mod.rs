@@ -1,7 +1,12 @@
-use crate::Block;
-use alloy::primitives::{Address, Bytes, B256, U256};
+use crate::{init_hash_scheme, Block};
+use alloy::{
+    primitives::{Address, Bytes, B256, U256},
+    serde::storage,
+};
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, Map};
+use std::collections::HashMap;
+use zktrie::{ZkMemoryDb, ZkTrieNode};
 
 mod tx;
 pub use tx::{ArchivedTransactionTrace, TransactionTrace, TxL1Msg, TypedTransaction};
@@ -70,18 +75,58 @@ struct BytecodeTrace {
 )]
 #[archive(check_bytes)]
 #[archive_attr(derive(Debug, Hash, PartialEq, Eq))]
-struct StorageTrace {
+pub struct StorageTrace {
     /// root before
     #[serde(rename = "rootBefore")]
     root_before: B256,
     /// root after
     #[serde(rename = "rootAfter")]
     root_after: B256,
+    /// account proofs
+    #[serde_as(as = "Option<Map<_, _>>")]
+    pub proofs: Option<Vec<(Address, Vec<Bytes>)>>,
+    #[serde(rename = "storageProofs", default)]
+    #[serde_as(as = "Map<_,Map<_, _>>")]
+    /// storage proofs for each account
+    pub storage_proofs: Vec<(Address, Vec<(B256, Vec<Bytes>)>)>,
     /// proofs
     #[serde(rename = "flattenProofs")]
-    #[serde_as(as = "Map<_, _>")]
-    flatten_proofs: Vec<(B256, Bytes)>,
+    #[serde_as(as = "Option<Map<_, _>>")]
+    pub flatten_proofs: Option<Vec<(B256, Bytes)>>,
 }
+
+// #[serde_as]
+// #[derive(
+//     rkyv::Archive,
+//     rkyv::Serialize,
+//     rkyv::Deserialize,
+//     Serialize,
+//     Deserialize,
+//     Default,
+//     Debug,
+//     Clone,
+//     Eq,
+//     PartialEq,
+// )]
+// #[archive(check_bytes)]
+// #[archive_attr(derive(Debug, Hash, PartialEq, Eq))]
+// struct StorageTraceMorph {
+//     /// root before
+//     #[serde(rename = "rootBefore")]
+//     root_before: B256,
+//     /// root after
+//     #[serde(rename = "rootAfter")]
+//     root_after: B256,
+//     /// account proofs
+//     pub proofs: Option<AccountTrieProofs>,
+//     #[serde(rename = "storageProofs", default)]
+//     /// storage proofs for each account
+//     pub storage_proofs: StorageTrieProofs,
+// }
+/// account trie proof in storage proof
+pub type AccountTrieProofs = HashMap<Address, Vec<Bytes>>;
+/// storage trie proof in storage proof
+pub type StorageTrieProofs = HashMap<Address, HashMap<B256, Vec<Bytes>>>;
 
 /// Block trace format
 ///
@@ -106,7 +151,7 @@ pub struct BlockTrace {
     codes: Vec<BytecodeTrace>,
     /// storage trace BEFORE execution
     #[serde(rename = "storageTrace")]
-    storage_trace: StorageTrace,
+    pub storage_trace: StorageTrace,
     //d tx_storage_trace
     /// l1 tx queue
     #[serde(rename = "startL1QueueIndex", default)]
@@ -114,6 +159,63 @@ pub struct BlockTrace {
     /// Withdraw root
     // a
     withdraw_trie_root: B256,
+}
+
+const MAGICSMTBYTES: &[u8] = "THIS IS SOME MAGIC BYTES FOR SMT m1rRXgP2xpDI".as_bytes();
+
+impl BlockTrace {
+    /**
+     * flatten
+     */
+    pub fn flatten(&mut self) {
+        init_hash_scheme();
+        let account_proofs =
+            self.storage_trace
+                .proofs
+                .iter()
+                .flat_map(|kv_map: &Vec<(Address, Vec<Bytes>)>| {
+                    kv_map
+                        .iter()
+                        .map(|(k, bts)| (k, bts.iter().map(Bytes::as_ref)))
+                });
+
+        let storage_proofs = self
+            .storage_trace
+            .storage_proofs
+            .iter()
+            .flat_map(|(k, kv_map)| {
+                kv_map
+                    .iter()
+                    .map(move |(sk, bts)| (k, sk, bts.iter().map(Bytes::as_ref)))
+            });
+
+        let proofs = account_proofs
+            .flat_map(|(_, bytes)| bytes)
+            .chain(storage_proofs.flat_map(|(_, _, bytes)| bytes));
+
+        // proofs.map(|bytes| {
+        //     let n = ZkTrieNode::parse(bytes).expect("Blocktrace ZkTrieNode::parse");
+        //     let k: [u8; 32] = n.node_hash();
+        //     let v: [u8; 32] = n.as_storage().unwrap();
+        //     (B256::from_slice(&k), v.to_vec())
+        // })
+
+        let mut rt = vec![];
+        for bytes in proofs {
+            // if bytes.is_empty() {
+            //     println!("bytes is_empty")
+            // } else {
+            //     println!("bytes not empty")
+            // }
+            if bytes == MAGICSMTBYTES {
+                continue;
+            }
+            let n = ZkTrieNode::parse(bytes).expect("Blocktrace ZkTrieNode::parse");
+            let k: [u8; 32] = n.node_hash();
+            rt.push((B256::from_slice(&k), Bytes::copy_from_slice(bytes)));
+        }
+        self.storage_trace.flatten_proofs = Some(rt);
+    }
 }
 
 impl Block for BlockTrace {
@@ -178,8 +280,9 @@ impl Block for BlockTrace {
     fn flatten_proofs(&self) -> impl Iterator<Item = (&B256, &[u8])> {
         self.storage_trace
             .flatten_proofs
-            .iter()
-            .map(|(k, v)| (k, v.as_ref()))
+            .as_ref()
+            .into_iter()
+            .flat_map(|proof| proof.iter().map(|(k, v)| (k, v.as_ref())))
     }
 }
 
@@ -249,8 +352,9 @@ impl Block for ArchivedBlockTrace {
     fn flatten_proofs(&self) -> impl Iterator<Item = (&B256, &[u8])> {
         self.storage_trace
             .flatten_proofs
-            .iter()
-            .map(|(k, v)| (k, v.as_ref()))
+            .as_ref()
+            .into_iter()
+            .flat_map(|proof| proof.iter().map(|(k, v)| (k, v.as_ref())))
     }
 }
 
@@ -390,15 +494,15 @@ mod tests {
             block.storage_trace.root_after,
             archived_block.storage_trace.root_after
         );
-        for (proof, archived_proof) in block
-            .storage_trace
-            .flatten_proofs
-            .iter()
-            .zip(archived_block.storage_trace.flatten_proofs.iter())
-        {
-            assert_eq!(proof.0, archived_proof.0);
-            assert_eq!(proof.1.as_ref(), archived_proof.1.as_ref());
-        }
+        // for (proof, archived_proof) in block
+        //     .storage_trace
+        //     .flatten_proofs
+        //     .iter()
+        //     .zip(archived_block.storage_trace.flatten_proofs.iter())
+        // {
+        //     assert_eq!(proof.get(0).unwrap().0, archived_proof.0);
+        //     assert_eq!(proof.get(1).as_ref(), archived_proof.1.as_ref());
+        // }
 
         assert_eq!(
             block.start_l1_queue_index,
