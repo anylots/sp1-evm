@@ -108,7 +108,7 @@ pub struct BlockTrace {
     /// block
     header: BlockHeader,
     /// txs
-    transactions: Vec<TransactionTrace>,
+    pub transactions: Vec<TransactionTrace>,
     //d execution_results
     /// bytecodes
     codes: Vec<BytecodeTrace>,

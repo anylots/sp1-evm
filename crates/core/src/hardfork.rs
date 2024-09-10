@@ -6,27 +6,27 @@ use revm::{
 use sbv_primitives::predeployed::l1_gas_price_oracle;
 use std::collections::HashMap;
 
-/// Scroll devnet chain id
-pub const SCROLL_DEVNET_CHAIN_ID: u64 = 222222;
-/// Scroll testnet chain id
-pub const SCROLL_TESTNET_CHAIN_ID: u64 = 534351;
-/// Scroll mainnet chain id
-pub const SCROLL_MAINNET_CHAIN_ID: u64 = 534352;
+/// Morph devnet chain id
+pub const MORPH_DEVNET_CHAIN_ID: u64 = 53077;
+/// Morph testnet chain id
+pub const MORPH_TESTNET_CHAIN_ID: u64 = 2810;
+/// Morph mainnet chain id
+pub const MORPH_MAINNET_CHAIN_ID: u64 = 2818;
 
 /// Hardfork heights for Scroll networks, grouped by chain id.
 static HARDFORK_HEIGHTS: Lazy<HashMap<u64, HashMap<SpecId, u64>>> = Lazy::new(|| {
     let mut map = HashMap::new();
     map.insert(
-        SCROLL_DEVNET_CHAIN_ID,
-        HashMap::from([(SpecId::BERNOULLI, 0), (SpecId::CURIE, 5)]),
+        MORPH_DEVNET_CHAIN_ID,
+        HashMap::from([(SpecId::BERNOULLI, 0), (SpecId::CURIE, 0)]),
     );
     map.insert(
-        SCROLL_TESTNET_CHAIN_ID,
-        HashMap::from([(SpecId::BERNOULLI, 3747132), (SpecId::CURIE, 4740239)]),
+        MORPH_TESTNET_CHAIN_ID,
+        HashMap::from([(SpecId::BERNOULLI, 0), (SpecId::CURIE, 0)]),
     );
     map.insert(
-        SCROLL_MAINNET_CHAIN_ID,
-        HashMap::from([(SpecId::BERNOULLI, 5220340), (SpecId::CURIE, 7096836)]),
+        MORPH_MAINNET_CHAIN_ID,
+        HashMap::from([(SpecId::BERNOULLI, 0), (SpecId::CURIE, 0)]),
     );
 
     map

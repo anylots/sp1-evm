@@ -53,8 +53,12 @@ pub fn prove(trace_path: &str) {
     // Setup the prover client.
 
     let mut traces: Vec<Vec<BlockTrace>> = load_trace(trace_path);
-    let trace_struct: &mut BlockTrace = &mut traces[0][0];
+    let trace_struct: &mut BlockTrace = &mut traces[0][1];
     println!("traces' post_state_root: {:?}", trace_struct.root_after());
+    println!(
+        "traces' transactions.len(): {:?}",
+        trace_struct.transactions.len()
+    );
     let st = trace_struct.storage_trace.clone();
     println!(
         "traces' flatten_proofs last address: {:?}",

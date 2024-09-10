@@ -18,7 +18,7 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<B256, VerificationError> {
     let root_before = l2_trace.root_before();
     let root_after = l2_trace.root_after();
 
-    let fork_config: HardforkConfig = HardforkConfig::default_from_chain_id(534352);
+    let fork_config: HardforkConfig = HardforkConfig::default_from_chain_id(2818);
 
     // or with v2 trace
     // let v2_trace = BlockTraceV2::from(l2_trace.clone());
