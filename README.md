@@ -1,7 +1,5 @@
-# SP1 Project Template
-
-This is a template for creating an end-to-end [SP1](https://github.com/succinctlabs/sp1) project
-that can generate a proof of any RISC-V program.
+# Morph prover
+Generate zk proof for the l2 batch.
 
 ## Requirements
 
@@ -22,7 +20,7 @@ RUST_BACKTRACE=full cargo run --release -- --execute
 To build the program to risc-v bin:
 
 ```sh
-cd program
+cd bin/client
 cargo prove build
 ```
 
@@ -34,7 +32,7 @@ This will output the compiled ELF to the file program/elf/riscv32im-succinct-zkv
 To run the program without generating a proof:
 
 ```sh
-cd script
+cd bin/host
 RUST_BACKTRACE=full cargo run --release -- --execute
 ```
 
@@ -45,7 +43,7 @@ This will execute the program and display the output.
 To generate a core proof for your program:
 
 ```sh
-cd script
+cd bin/host
 RUST_BACKTRACE=full cargo run --release -- --prove
 ```
 
@@ -72,22 +70,3 @@ To retrieve your `programVKey` for your on-chain contract, run the following com
 cargo run --release --bin vkey
 ```
 
-## Using the Prover Network
-
-We highly recommend using the Succinct prover network for any non-trivial programs or benchmarking purposes. For more information, see the [setup guide](https://docs.succinct.xyz/prover-network/setup.html).
-
-To get started, copy the example environment file:
-
-```sh
-cp .env.example .env
-```
-
-Then, set the `SP1_PROVER` environment variable to `network` and set the `SP1_PRIVATE_KEY`
-environment variable to your whitelisted private key.
-
-For example, to generate an EVM-compatible proof using the prover network, run the following
-command:
-
-```sh
-SP1_PROVER=network SP1_PRIVATE_KEY=... cargo run --release --bin evm
-```

@@ -10,7 +10,7 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<B256, VerificationError> {
     // TODO
     let versioned_hash: Vec<u8> = vec![];
 
-    // Step2. Execute all transactions
+    // Step2. execute all transactions
     let root_before = l2_trace.root_before();
     let root_after = l2_trace.root_after();
     let withdraw_root = l2_trace.withdraw_root();
@@ -37,7 +37,7 @@ pub fn verify(l2_trace: &BlockTrace) -> Result<B256, VerificationError> {
         l2_trace.block_hash(),
     );
 
-    // Step3. Compute pi hash
+    // Step3. compute pi hash
     let pi_hash = keccak256(
         [
             versioned_hash,

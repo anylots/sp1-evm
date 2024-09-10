@@ -27,6 +27,7 @@ rkyv = { version = "0.7", features = ["validation"] }
 thiserror = "1.0"
 tiny-keccak = "2.0"
 getrandom = { version = "*", features = ["custom"] } # just for disable
+log = "0.4"
 
 sp1-zkvm =  { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0830" }
 sp1-sdk = { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0830" }

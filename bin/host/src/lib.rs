@@ -1,15 +1,3 @@
-//! An end-to-end example of using the SP1 SDK to generate a proof of a program that can be executed
-//! or have a core proof generated.
-//!
-//! You can run this script using the following command:
-//! ```shell
-//! RUST_LOG=info cargo run --release -- --execute
-//! ```
-//! or
-//! ```shell
-//! RUST_LOG=info cargo run --release -- --prove
-//! ```
-
 use std::{fs::File, time::Instant};
 
 use clap::Parser;
@@ -45,44 +33,32 @@ pub fn prove_for_queue() {}
 
 pub fn prove(trace_path: &str) {
     // Setup the logger.
-    sp1_sdk::utils::setup_logger();
+    // sp1_sdk::utils::setup_logger();
 
     // Parse the command line arguments.
     let args = Args::parse();
 
-    // Setup the prover client.
-
     let mut traces: Vec<Vec<BlockTrace>> = load_trace(trace_path);
-    let trace_struct: &mut BlockTrace = &mut traces[0][1];
-    println!("traces' post_state_root: {:?}", trace_struct.root_after());
-    println!(
+    let block_trace: &mut BlockTrace = &mut traces[0][1];
+    log::info!("traces' post_state_root: {:?}", block_trace.root_after());
+    log::info!(
         "traces' transactions.len(): {:?}",
-        trace_struct.transactions.len()
+        block_trace.transactions.len()
     );
-    let st = trace_struct.storage_trace.clone();
-    println!(
-        "traces' flatten_proofs last address: {:?}",
-        st.proofs.unwrap().first().unwrap().0
-    );
-
-    trace_struct.flatten();
-    println!(
-        "traces' flatten_proofs last address: {:?}",
-        trace_struct.flatten_proofs().last().unwrap().0
-    );
-
-    let trace_str = serde_json::to_string(trace_struct).unwrap();
+    block_trace.flatten();
 
     // Execute the program in native
-    let expected_hash = verify(trace_struct).unwrap_or_default();
-    println!(
+    let expected_hash = verify(block_trace).unwrap_or_default();
+    log::info!(
         "pi_hash generated with native execution: {}",
         hex::encode(expected_hash.as_slice())
     );
 
+    // Setup the prover client.
     let client = ProverClient::new();
     // Setup the inputs.
     let mut stdin = SP1Stdin::new();
+    let trace_str = serde_json::to_string(block_trace).unwrap();
     stdin.write(&trace_str);
 
     // Execute the program in sp1-vm
@@ -90,19 +66,19 @@ pub fn prove(trace_path: &str) {
         .execute(STATELESS_VERIFIER_ELF, stdin.clone())
         .run()
         .unwrap();
-    println!("Program executed successfully.");
+    log::info!("Program executed successfully.");
 
     let pi_hash = public_values.read::<B256>();
-    println!(
+    log::info!(
         "pi_hash generated with sp1-vm execution: {}",
         hex::encode(pi_hash.as_slice())
     );
 
     assert_eq!(pi_hash, expected_hash);
-    println!("Values are correct!");
+    log::info!("Values are correct!");
 
     // Record the number of cycles executed.
-    println!(
+    log::info!(
         "Number of cycles: {}",
         execution_report.total_instruction_count()
     );
@@ -119,13 +95,13 @@ pub fn prove(trace_path: &str) {
             .expect("failed to generate proof");
 
         let duration_mins = start.elapsed().as_secs() / 60;
-        println!(
+        log::info!(
             "Successfully generated proof!, time use: {:?} minutes",
             duration_mins
         );
 
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");
-        println!("Successfully verified proof!");
+        log::info!("Successfully verified proof!");
     }
 }

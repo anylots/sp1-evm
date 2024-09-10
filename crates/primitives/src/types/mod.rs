@@ -121,7 +121,7 @@ pub struct BlockTrace {
     start_l1_queue_index: u64,
     /// Withdraw root
     // a
-    withdraw_trie_root: B256,
+    withdraw_trie_root: Option<B256>,
 }
 
 const MAGICSMTBYTES: &[u8] = "THIS IS SOME MAGIC BYTES FOR SMT m1rRXgP2xpDI".as_bytes();
@@ -211,7 +211,7 @@ impl Block for BlockTrace {
     }
 
     fn withdraw_root(&self) -> B256 {
-        self.withdraw_trie_root
+        self.withdraw_trie_root.unwrap_or_default()
     }
 
     fn codes(&self) -> impl ExactSizeIterator<Item = &[u8]> {
@@ -283,7 +283,7 @@ impl Block for ArchivedBlockTrace {
     }
 
     fn withdraw_root(&self) -> B256 {
-        self.withdraw_trie_root
+        B256::default()
     }
 
     fn codes(&self) -> impl ExactSizeIterator<Item = &[u8]> {
